@@ -93,9 +93,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .contract {
           width: 100%;
           max-width: 600px;
-          @apply(--layout-horizontal);
+          @apply(--layout-vertical);
           @apply(--layout-center-center);
-          margin: 10px 0px 10px 0px;
+          margin: 12px 0px 12px 0px;
 
         }
 
@@ -109,25 +109,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
       .changeconfig {
-
+        font-size: 12px;
+        margin: 0px 0px 10px 0px;
         color: var(--locals-blue);
       }
 
 
       .itemcost {
-        /*width: 100%;*/
+        width: 100%;
         @apply(--layout-horizontal);
         @apply(--layout-end);
         @apply(--layout-center-justified);
-        color: var(--locals-blue);
-        border: 1px solid var(--locals-blue);
-        box-sizing: border-box;
+        color: var(--locals-darkblue);
+/*        border: 1px solid var(--locals-blue);
+*/        box-sizing: border-box;
         padding: 8px;
         border-radius: 3px;
+        margin: 20px 0px 20px 0px;
       }
 
       .itemcost p {
-        font-size: 20px;
+        @apply(--opensans-semibold);
+        font-size: 16px;
+        line-height: 21px;
       }
 
       .bolder {
@@ -137,19 +141,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .localcoinamount {
 /*        width: 15px;
         height: 15px;*/
-        margin: 0px 0px 2px 2px;
+        margin: 0px 0px -3px 2px;
       }
 
       .currentconfig {
         width: 100%;
-        @apply(--layout-vertical);
+        @apply(--layout-horizontal);
+        @apply(--layout-wrap);
         @apply(--layout-start);
-        @apply(--layout-start-justified);
+        @apply(--layout-around-justified);
         margin: 30px 0px 30px 0px;
       }
 
       .configitem {
         width: 100%;
+        max-width: 300px;
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
@@ -211,8 +217,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       <div class="selectedtype">
         <locals-icon icon="club" xl class="typeicon"></locals-icon>
+        <a href="" class="changeconfig">Change image</a>
+
+        <div class="whitespace"></div>
+
           <locals-input class="clubname" label="Name your new club" bind-value="{{clubname}}" center autofocus></locals-input>
         <div class="whitespace"></div>
+
         <div class="whitespace"></div>
 
       <div class="tussenschot"></div>
@@ -222,34 +233,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <div class="configitemdescr">        
             <p>A new member must be added by the creator.</p>
             <p>A member can be removed from the club by the creator.</p>
-          </div>
-        </div>
-
-        <div class="configitem">
-          <locals-icon verysmall icon="babbles" iconcolor="grey7"  class="itemicon"></locals-icon>        
-          <div class="configitemdescr">        
-            <p>Every member can join the clubs chatroom.</p>
+            <a href="" class="changeconfig">Change this config</a>
           </div>
         </div>
 
         <div class="configitem">
           <locals-icon verysmall icon="voting" iconcolor="grey7"  class="itemicon"></locals-icon>        
           <div class="configitemdescr">        
-            <p>Every member can make a new proposal.</p>
-            <p>Making a proposal cost 2<locals-icon veryverysmall icon="localcoin" iconcolor="darkgrey"></locals-icon>).</p>
+            <p>Every member can make a new proposal (cost 2<locals-icon veryverysmall icon="localcoin" iconcolor="darkgrey" class="localcoinamount"></locals-icon>).</p>
             <p>To pass a proposal as valid, the quotum of 80% of all voters should be reached.</p>
+            <a href="" class="changeconfig">Change this config</a>
           </div>
         </div>
 
+        <div class="configitem">
+          <locals-icon verysmall icon="babbles" iconcolor="grey7"  class="itemicon"></locals-icon>        
+          <div class="configitemdescr">        
+            <p>Every member can join the clubs public chatroom.</p>
+          </div>
+        </div>
+
+      <div class="whitespace"></div>
+
+        </div>
+      <div class="tussenschot"></div>
+      <div class="itemcost">
+          <p>Creating this club costs 5<locals-icon veryverysmall icon="localcoin" iconcolor="darkblue" class="localcoinamount"></locals-icon></p>
+      </div>
+      <div class="tussenschot"></div>
+      <div class="whitespace"></div>
         <div class="contract">
-          <a href="">LocalsClub.sol</a>
-          <a href="" class="changeconfig">Change config</a>
+        <a href="">LocalsClub.sol</a>
         </div>
+      <div class="whitespace"></div>
 
-        </div>
-<div class="tussenschot"></div>
-
-
+      <locals-button on-tap="confirm" bg="blue" icon="v" txtcolor="white" small></locals-button>
 <!-- 
        <div class="descr">
         <ul>
