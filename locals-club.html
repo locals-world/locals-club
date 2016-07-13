@@ -28,8 +28,170 @@ Example:
 
 <dom-module id="locals-club">
   <template>
-   <locals-object on-internalstatechange="_fixdata" config="[[config]]" objectdata="[[objectdata]]" state="{{visualstate}}" on-state-changed="_visualstatechanged" renderstate="{{renderstate}}"></locals-object>
-   <locals-dataobject id="ldataobject" hashfunction="{{hashfunction}}" on-state-changed="_datastatechanged" objectdata="[[objectdata]]" state="{{datastate}}" config="[[dataconfig]]" renderstate="{{renderstate}}"></locals-dataobject>
+<style>
+      :host {
+        display: block;
+        box-sizing: border-box;
+        color: black;
+        --preview-title:20px;
+        --clubname-size:24px;
+        --clubavatar-size:40px;
+        --closed-padding: 10px;        
+/*        --valids-color: var(--locals-blue);
+        --view-title:24px;
+        --view-lineheight:44px;
+        --line-height2:28px; 
+        --inner-padding: 20px 0px 20px 0px;*/
+        background-color: white;
+        width: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
+      }
+
+      h1 {
+        @apply(--locals-font-h1);
+        font-size: var(--view-title);
+        line-height: var(--view-lineheight);
+        margin: 0px;
+      }
+/*      h2 {
+        @apply(--locals-font-h2);
+      }*/
+      p {
+        @apply(--locals-font-body1);
+      }
+      small {
+        @apply(--locals-font-small);
+      }
+
+
+      .preview {
+        width: 100%;
+        max-width: 90vw;
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        box-sizing: border-box;
+        padding: var(--closed-padding);
+      }
+
+      .previewavatar {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius: 50%;
+        margin: 0px 20px 0px 0px;
+        background-color: var(--locals-grey1);
+      }
+
+      .previewvals {
+/*        @apply(--layout-flex);*/
+      max-width: 80%; 
+      }
+
+      .previewvals h2 {
+        margin: 5px 0px  0px 0px;
+        @apply(--opensans-light);
+        font-size: var(--preview-title);
+        color: var(--locals-grey7);
+      }
+
+      .clubinfototal {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        box-sizing: border-box;
+        padding: var(--closed-padding);
+        border-bottom: 2px solid rgba(0,0,0,0.05);
+      }
+
+
+      .clubinfo {
+        width: 100%;
+        @apply(--layout-vertical);
+        @apply(--layout-start);
+        @apply(--layout-start-justified);
+        @apply(--layout-flex);
+
+      }
+
+      .clubavatar {
+        width: var(--clubavatar-size);
+        height: var(--clubavatar-size);
+        box-sizing: border-box;
+        padding: 10px;
+        border-radius: 50%;
+        margin: 0px 20px 0px 0px;
+        background-color: var(--locals-grey1);
+      }
+
+
+      .clubinfo h2 {
+        @apply(--opensans-light);
+        margin: 0px 0px 10px 0px;
+        font-size: var(--clubname-size);
+        color: var(--locals-grey7);
+      }
+
+      .extrainfo {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+        @apply(--layout-wrap);
+      }
+
+      .clubmoneys {
+        color: var(--locals-blue);
+
+      }
+
+      .clubcreated {
+        
+      }
+
+      .localcoinamount {
+        margin: 0px 0px -3px 2px;
+      }
+      </style>
+
+  <template is="dom-if" if="{{_is(renderstate,'closed')}}">
+    <div class="preview">
+      <div class="previewavatar">
+      </div>
+      <div class="previewvals" on-tap="_toEdit">
+        <h2>{{datastate.name}}</h2>
+      </div>
+    </div>
+  </template>
+
+  <template is="dom-if" if="{{_is(renderstate,'open')}}">
+      <div class="clubinfototal">
+        <div class="clubavatar">
+        </div>
+        <div class="clubinfo" on-tap="_toEdit">
+          <h2>{{datastate.name}}</h2>
+          <div class="extrainfo">
+            <div class="clubmoneys">
+              <p>2<locals-icon veryverysmall icon="localcoin" iconcolor="blue" class="localcoinamount"></locals-icon></p>
+            </div>
+            <div class="clubmembers">
+            </div>
+            <div class="clubcreated">
+            </div>
+          </div>
+        </div>
+      </div>
+
+  </template>
+
+
+<!--    <locals-object on-internalstatechange="_fixdata" config="[[config]]" objectdata="[[objectdata]]" state="{{visualstate}}" on-state-changed="_visualstatechanged" renderstate="{{renderstate}}"></locals-object>
+   <locals-dataobject id="ldataobject" hashfunction="{{hashfunction}}" on-state-changed="_datastatechanged" objectdata="[[objectdata]]" state="{{datastate}}" config="[[dataconfig]]" renderstate="{{renderstate}}"></locals-dataobject> -->
 
   </template>
 
@@ -58,14 +220,23 @@ Example:
           notify: true,
           value: {
               "name": "Mijn Club",
-            }
+            },
+          observer: '_datastate'
+
         },
 
         renderstate: {
           type: String          
         },
+
+        sizeview: {
+          type: String,
+          observer: '_sizeview'
+        },
+
         objectdata: {
           type: Object,
+          observer: '_objectdata'
 
         },
         hashfunction: {
@@ -180,9 +351,48 @@ Example:
       },
 
       _datastatechanged: function(e) {
-        //console.log('Data state changed');
+        console.log('Data state changed',e.detail);
         this.fire('data-state-changed',e.detail);
       },
+
+      _datastate: function() {
+        console.log("HIIIIEERPPPP", JSON.stringify(this.datastate));
+      },
+
+
+
+
+    _sizeview: function(){
+        switch(this.sizeview) {
+            case 'phone':
+              this.customStyle['--preview-title'] = '20px';
+              this.customStyle['--clubname-size'] = '24px';
+              this.customStyle['--clubavatar-size'] = '40px';
+              this.customStyle['--closed-padding'] = '6vw';
+              this.updateStyles();
+              break;
+            case 'desktop':
+              this.customStyle['--preview-title'] = '20px';
+              this.customStyle['--clubname-size'] = '30px';
+              this.customStyle['--clubavatar-size'] = '48px';
+              this.customStyle['--closed-padding'] = '4vw';
+              this.updateStyles();
+              break;
+            case 'xlarge':
+              this.customStyle['--preview-title'] = '22px';
+              this.customStyle['--clubname-size'] = '36px';
+              this.customStyle['--clubavatar-size'] = '48px';
+              this.customStyle['--closed-padding'] = '2vw';
+              this.updateStyles();
+              break;
+            default:
+            //console.log("!!! ** Niks");
+        }
+      },
+
+
+
+
 
 
     });
