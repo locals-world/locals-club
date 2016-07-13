@@ -358,10 +358,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.approveAndCall(function(err, res) {
           console.log('ApproveAndVall is gebeurd...', res);
           this.createClub(function(err, res) {
-            debugger;
-            console.log('createClub is gebeurd...', res);
-            lsapi.data.collection[clubid].status = 'created';
-            lsapi.writeData(); 
+            if (err){
+              console.log('Error creating club....');
+              delete lsapi.data.collection[clubid];
+              lsapi.writeData();               
+            }else{
+              console.log('createClub is gebeurd...', res);
+              lsapi.data.collection[clubid].status = 'created';
+              lsapi.writeData();               
+            }
           });
         }.bind(this));
       },
@@ -371,20 +376,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         console.log('Mijn account: ', this.fixaddress(this.web3wallet.account));
 
-        this.contracturl = this.resolveUrl('../../contracts/localsStore.json');
-        this.importHref(this.contracturl, function(e) {
-          this.contractjson = JSON.parse(e.target.import.body.innerText);
+        var contracturl = this.resolveUrl('../../contracts/localsStore.json');
+        this.importHref(contracturl, function(e) {
+          var contractjson = JSON.parse(e.target.import.body.innerText);
+          //console.log(this.contractjson);
           this.web3wallet.web3.eth.getGasPrice(function(err, result) {
             var gasPrice = result.toNumber(10);
-            var MyContract = this.web3wallet.web3.eth.contract(this.contractjson.abi);
+            var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
             var myContractInstance = MyContract.at(this.localsstorecontractaddress);
-            //debugger;
+            debugger;
             result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "clubicon", {
                 from: this.fixaddress(this.web3wallet.account),
                 gasPrice: gasPrice,
                 gasLimit: 3000000,
-                gas: 2000000,
-                data: this.contractjson.bytecode
+                gas: 3000000,
+                data: contractjson.bytecode
               },
               function(err, result) {
                 if (err !== null) {
@@ -392,19 +398,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   console.log('ERROR: Transaction didnt go through. See console.');
                   cb(err);
                 } else {
-                  console.log('Transaction Successful!');
-                  console.log('Tx hash=', result);
+                  console.log('Createclub Successful!');
+                  console.log('Createclub txhash=', result);
 
+
+var event = myContractInstance.Log(null,null,function(error, result){
 debugger;
-                  this.waitTx(result, function(success) {
-                    if (!success) {
-                      console.log('waitTX failed');
-                    } else {
-                      console.log('mined TXhash', result);
-                      cb(null, result);
-                    }
-                    cb(success);
-                  }.bind(this))
+  if (!error){
+    console.log(result);
+  }
+});
+
+
+
+
+//debugger;
+                  // this.waitTx(result, function(success) {
+                  //   if (!success) {
+                  //     console.log('waitTX failed');
+                  //   } else {
+                  //     console.log('mined TXhash', result);
+                  //     cb(null, result);
+                  //   }
+                  //   cb(success);
+                  // }.bind(this))
 
 
                 }
@@ -442,18 +459,19 @@ debugger;
                 console.log('ERROR: Transaction didnt go through. See console.');
                 cb(err);
               } else {
-                console.log('Transaction Successful!');
-                console.log('Tx hash=', result);
+                console.log('approveAndCall Successful!');
+                console.log('approveAndCall Tx hash=', result);
 
 
               this.waitTx(result, function(success) {
                 if (!success){
                   console.log('waitTX failed');
+                  cb('TX timeout');
                 }else{
                   console.log('mined TXhash', result);
                   cb(null,result);
                 }
-                cb(success);
+                //cb(success);
               }.bind(this))
 
 
@@ -505,7 +523,7 @@ debugger;
             --blockCounter;
             // Found tx hash?
             if (block.transactions.indexOf(txHash) > -1) {
-              debugger;
+              //debugger;
               // Tx is finished
               filter.stopWatching();
               filter = null;
