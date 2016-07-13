@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../locals-button/locals-button.html">
 <link rel="import" href="../locals-style/locals-style.html">
 <link rel="import" href="../locals-confirm/locals-confirm.html">
+<script src="../../bower_components/node-uuid/uuid.js"></script>
 
 <dom-module id="locals-club-new">
   <template>
@@ -308,13 +309,217 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
+      ready: function(){
+       
+      },
+
+      attached: function() {
+
+        this.web3wallet = document.querySelector('web3-wallet');
+
+
+        this.localsstorecontractaddress = new Polymer.IronMetaQuery({
+          key: 'localsstorecontractaddress'
+        }).value;
+
+        this.localscointokencontractaddress = new Polymer.IronMetaQuery({
+          key: 'localscointokencontractaddress'
+        }).value;
+
+      },
+
       toHome: function(){
         this.fire('from-detail');
       },
 
-      confirm: function(){
-        console.log('create a club');
+      confirm: function(cb) {
+
+        var clubid = uuid.v4();
+
+        var lsapi = document.getElementById("lsapi");
+        console.log(lsapi.data.collection);
+
+        lsapi.data.collection[clubid] = {
+            "status": "creating",
+            "component": {
+              "name": "locals-club",
+//              "contract": "0x000"
+            },
+            "data":{
+              "name":this.clubname,
+              },
+            "config":
+              [[0,0]]
+            };
+//        debugger;
+        lsapi.writeData(); 
+
+
+        this.approveAndCall(function(err, res) {
+          console.log('ApproveAndVall is gebeurd...', res);
+          this.createClub(function(err, res) {
+            debugger;
+            console.log('createClub is gebeurd...', res);
+            lsapi.data.collection[clubid].status = 'created';
+            lsapi.writeData(); 
+          });
+        }.bind(this));
+      },
+
+      createClub: function(cb) {
+
+
+        console.log('Mijn account: ', this.fixaddress(this.web3wallet.account));
+
+        this.contracturl = this.resolveUrl('../../contracts/localsStore.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+          this.web3wallet.web3.eth.getGasPrice(function(err, result) {
+            var gasPrice = result.toNumber(10);
+            var MyContract = this.web3wallet.web3.eth.contract(this.contractjson.abi);
+            var myContractInstance = MyContract.at(this.localsstorecontractaddress);
+            //debugger;
+            result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "clubicon", {
+                from: this.fixaddress(this.web3wallet.account),
+                gasPrice: gasPrice,
+                gasLimit: 3000000,
+                gas: 2000000,
+                data: this.contractjson.bytecode
+              },
+              function(err, result) {
+                if (err !== null) {
+                  console.log(err);
+                  console.log('ERROR: Transaction didnt go through. See console.');
+                  cb(err);
+                } else {
+                  console.log('Transaction Successful!');
+                  console.log('Tx hash=', result);
+
+debugger;
+                  this.waitTx(result, function(success) {
+                    if (!success) {
+                      console.log('waitTX failed');
+                    } else {
+                      console.log('mined TXhash', result);
+                      cb(null, result);
+                    }
+                    cb(success);
+                  }.bind(this))
+
+
+                }
+              }.bind(this));
+          }.bind(this));
+        }.bind(this));
+
+
+      },
+
+      approveAndCall: function(cb){
+        console.log('create a club',this.clubname);
+
+    
+      console.log('Mijn account: ', this.fixaddress(this.web3wallet.account));
+  
+      this.contracturl = this.resolveUrl('../../contracts/localsCointoken.json');
+      this.importHref(this.contracturl, function(e) {
+        this.contractjson = JSON.parse(e.target.import.body.innerText);
+        this.web3wallet.web3.eth.getGasPrice(function(err, result) {
+          var gasPrice = result.toNumber(10);
+          var MyContract = this.web3wallet.web3.eth.contract(this.contractjson.abi);
+          var myContractInstance = MyContract.at(this.localscointokencontractaddress);
+         //debugger;
+          result = myContractInstance.approveAndCall.sendTransaction(this.localsstorecontractaddress, 500,null, {
+              from: this.fixaddress(this.web3wallet.account),
+              gasPrice: gasPrice,
+              gasLimit: 3000000,
+              gas: 2000000,
+              data: this.contractjson.bytecode
+            },
+            function(err, result) {
+              if (err !== null) {
+                console.log(err);
+                console.log('ERROR: Transaction didnt go through. See console.');
+                cb(err);
+              } else {
+                console.log('Transaction Successful!');
+                console.log('Tx hash=', result);
+
+
+              this.waitTx(result, function(success) {
+                if (!success){
+                  console.log('waitTX failed');
+                }else{
+                  console.log('mined TXhash', result);
+                  cb(null,result);
+                }
+                cb(success);
+              }.bind(this))
+
+
+              }
+            }.bind(this));
+        }.bind(this));
+      }.bind(this));
+
+
+
+      },
+
+    fixaddress: function(address) {
+      function strStartsWith(str, prefix) {
+        return str.indexOf(prefix) === 0;
       }
+
+      if (!strStartsWith(address, '0x')) {
+        return ('0x' + address);
+      }
+      return address;
+    },
+
+
+
+
+
+
+        waitTx: function(txHash, callback) {
+          /*
+           * Watch for a particular transaction hash and call the awaiting function when done;
+           * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
+           * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
+           */
+          var blockCounter = 15;
+          // Wait for tx to be finished
+          var filter = this.web3wallet.web3.eth.filter('latest').watch(function(err, blockHash) {
+            if (blockCounter <= 0) {
+              filter.stopWatching();
+              filter = null;
+              console.warn('!! Tx expired !!');
+              if (callback)
+                return callback(false);
+              else
+                return false;
+            }
+            // Get info about latest Ethereum block
+            var block = this.web3wallet.web3.eth.getBlock(blockHash);
+            --blockCounter;
+            // Found tx hash?
+            if (block.transactions.indexOf(txHash) > -1) {
+              debugger;
+              // Tx is finished
+              filter.stopWatching();
+              filter = null;
+              if (callback)
+                return callback(true);
+              else
+                return true;
+              // Tx hash not found yet?
+            } else {
+              // console.log('Waiting tx..', blockCounter);
+            }
+          }.bind(this));
+        },
+
 
     });
   })();
