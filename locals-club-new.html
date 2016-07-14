@@ -384,7 +384,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             var gasPrice = result.toNumber(10);
             var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
             var myContractInstance = MyContract.at(this.localsstorecontractaddress);
-            debugger;
+            //debugger;
             result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "clubicon", {
                 from: this.fixaddress(this.web3wallet.account),
                 gasPrice: gasPrice,
@@ -392,21 +392,27 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 gas: 3000000,
                 data: contractjson.bytecode
               },
-              function(err, result) {
+              function(err, txhash) {
                 if (err !== null) {
                   console.log(err);
                   console.log('ERROR: Transaction didnt go through. See console.');
                   cb(err);
                 } else {
                   console.log('Createclub Successful!');
-                  console.log('Createclub txhash=', result);
+                  console.log('Createclub txhash=', txhash);
 
 
-var event = myContractInstance.Log(null,null,function(error, result){
+var event = myContractInstance.ClubCreated(null,null,null,function(error, result){
 debugger;
   if (!error){
     console.log(result);
   }
+
+  if (result && result.transactionHash === txhash){
+    console.log('club created YAY');
+  }
+
+
 });
 
 
