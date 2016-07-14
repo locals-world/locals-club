@@ -7,9 +7,13 @@ LOCALS
 -->
 
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../neon-animation/neon-animation.html">
+
 <link rel="import" href="../locals-object/locals-object.html">
 <link rel="import" href="../locals-object/locals-dataobject.html">
 <link rel="import" href="../locals-loader/locals-dataloader.html">
+<link rel="import" href="../locals-input/locals-input.html">
+<link rel="import" href="../locals-button/locals-button.html">
 
 <!--
 Locals residence : a residence object.
@@ -36,7 +40,7 @@ Example:
         color: black;
         --preview-title:20px;
         --clubname-size:24px;
-        --clubavatar-size:40px;
+        --clubavatar-size:50px;
         --closed-padding: 10px;        
 /*        --valids-color: var(--locals-blue);
         --view-title:24px;
@@ -103,7 +107,7 @@ Example:
         margin: 5px 0px  0px 0px;
         @apply(--opensans-light);
         font-size: var(--preview-title);
-        color: var(--locals-grey7);
+        color: var(--locals-darkgrey);
       }
 
       .clubinfototal {
@@ -113,7 +117,6 @@ Example:
         @apply(--layout-start-justified);
         box-sizing: border-box;
         padding: var(--open-padding);
-        border-bottom: 2px solid rgba(0,0,0,0.05);
       }
 
 
@@ -130,18 +133,28 @@ Example:
         width: var(--clubavatar-size);
         height: var(--clubavatar-size);
         box-sizing: border-box;
-        padding: 10px;
         border-radius: 50%;
+        overflow: hidden;
         margin: 0px 20px 0px 0px;
         background-color: var(--locals-grey1);
       }
 
+      .clubavatar img {
+        width: 100%;
+        height: 100%;
+      }
+
+
+      .clubavatar locals-icon {
+        width: 100%;
+        height: 100%;
+      }
 
       .clubinfo h2 {
         @apply(--opensans-light);
         margin: 0px 0px 10px 0px;
         font-size: var(--clubname-size);
-        color: var(--locals-grey7);
+        color: var(--locals-darkgrey);
       }
 
       .extrainfo {
@@ -150,11 +163,20 @@ Example:
         @apply(--layout-center);
         @apply(--layout-start-justified);
         @apply(--layout-wrap);
+
+      }
+
+      .extrainfo p {
+        font-size: 14px;        
       }
 
       .clubmoneys {
         color: var(--locals-blue);
 
+      }
+      .clubmembers {
+        color: var(--locals-grey6);
+        margin: 0px 15px 0px 15px;
       }
 
       .clubcreated {
@@ -209,6 +231,52 @@ Example:
       }
 
 
+
+      .clubcontainer  {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 8vw;
+      }
+
+      .clubcanvas {
+        width: 100%;
+      }
+
+      .newmember {
+        width: 100%;
+        max-width: 600px;
+      }
+
+      .clubapps {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        border-bottom: 2px solid rgba(0,0,0,0.05);        
+      }
+
+      iron-selector {
+        @apply(--layout-horizontal);
+/*        width: 100%;
+*/      }
+
+      .clubapp {
+        width: 60px;
+        height: 60px;
+        background-color: transparent;
+        opacity: 0.8;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        border-bottom: 2px solid transparent;
+      }
+
+      .iron-selected  {
+        background-color: var(--locals-grey4);
+
+/*        border-bottom: 2px solid var(--locals-blue);
+*/        opacity: 1;
+      }
+
+
       </style>
 
   <template is="dom-if" if="{{_is(renderstate,'closed')}}">
@@ -259,6 +327,7 @@ Example:
     <template is="dom-if" if="{{_is(status,'creating')}}">
       <div class="clubinfototal">
         <div class="clubavatar">
+          <img src="http://a2.files.biography.com/image/upload/c_fill,cs_srgb,dpr_1.0,g_face,h_300,q_80,w_300/MTIwNjA4NjM0MTgyMzM4MDYw.jpg">
         </div>
         <div class="clubinfo" on-tap="_toEdit">
           <h2>{{datastate.name}}</h2>
@@ -273,19 +342,60 @@ Example:
     <template is="dom-if" if="{{_is(status,'created')}}">
       <div class="clubinfototal">
         <div class="clubavatar">
+          <locals-icon icon="club"></locals-icon>
+          <!-- <img src="alsereentjewordtgeuploadkomtdiehier"> -->
         </div>
         <div class="clubinfo" on-tap="_toEdit">
           <h2>{{datastate.name}}</h2>
           <div class="extrainfo">
             <div class="clubmoneys">
-              <p>2<locals-icon veryverysmall icon="localcoin" iconcolor="blue" class="localcoinamount"></locals-icon></p>
+              <p>x<locals-icon veryverysmall icon="localcoin" iconcolor="blue" class="localcoinamount"></locals-icon></p>
             </div>
             <div class="clubmembers">
+            <p>x members</p>
             </div>
             <div class="clubcreated">
             </div>
           </div>
         </div>
+      </div>
+      <div class="clubcontainer">
+      <div class="clubapps">
+        <iron-selector attr-for-selected="app" on-iron-select="appSelected" selected="{{selectedapp}}">
+        <div class="clubapp" app="users">
+          <locals-icon icon="users" iconcolor="darkgrey" small></locals-icon>
+        </div>
+        <div class="clubapp" app="babbles">
+          <locals-icon icon="babbles" iconcolor="darkgrey" small></locals-icon>
+        </div>
+        <div class="clubapp" app="voting">
+          <locals-icon icon="voting" iconcolor="darkgrey" small></locals-icon>
+        </div>
+        </iron-selector>
+      </div>
+        <neon-animated-pages attr-for-selected="part" selected="{{selectedapp}}">
+          <neon-animatable part="users">
+          <div class="clubcanvas">
+
+          <template is="dom-if" if="{{_is(state,'init')}}">
+            <p>Do you add-member?</p>
+            <locals-input class="newmember" label="Member code" bind-value="{{membercode}}"></locals-input>
+            <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button> 
+          </template>
+
+          <template is="dom-if" if="{{_is(state,'waiting')}}">
+          <locals-loader>Waiting on the blockenchain!</locals-loader>
+          </template>
+
+          </div>
+          </neon-animatable>
+          <neon-animatable>
+          Hier komt babbles
+          </neon-animatable>
+          <neon-animatable>
+          Hier komt voting
+          </neon-animatable>
+        </neon-animated-pages>
       </div>
     </template>
 
@@ -358,6 +468,11 @@ Example:
           observer: '_sizeview'
         },
 
+        selectedapp: {
+          type: String,
+          value: 'users'
+        },
+
         objectdata: {
           type: Object,
           observer: '_objectdata'
@@ -396,7 +511,13 @@ Example:
 
       // Element Lifecycle
       ready: function() {
-        this.status = "creating";
+
+
+          console.log("Hier issem se:", this.$.appselector);
+
+        this.status = 'created';
+        this.state = 'init';
+
 
         this.dataconfig = {
           fields: [
@@ -484,15 +605,33 @@ Example:
         console.log("HIIIIEERPPPP", JSON.stringify(this.datastate));
       },
 
+      toWaiting: function(){
+          var self = this;
+          this.whisper = document.querySelector('locals-whisperer');
+          this.handler = document.querySelector('locals-verification-validator');
+          console.log('ADD MEMBER: ',this.membercode);
+          this.whisper.whisperpost(this.membercode, JSON.stringify({
+                  'command': 'requestpubkey',
+                  'from': this.whisper.topic,
+                  'data': null
+                }));
+          this.state = 'waiting';
+          this.handler.addEventListener('pub-key', function(e){
+            console.log('got pub key: ', e.detail);
+            self.partnerpubkey = e.detail;
 
+            /* SPONNETRAKET: Hier de transactie doen!!!!!! */
+           console.log("Ich hemmem!", self.partnerpubkey);
 
+         });
+        },
 
     _sizeview: function(){
         switch(this.sizeview) {
             case 'phone':
               this.customStyle['--preview-title'] = '20px';
               this.customStyle['--clubname-size'] = '24px';
-              this.customStyle['--clubavatar-size'] = '40px';
+              this.customStyle['--clubavatar-size'] = '50px';
               this.customStyle['--closed-padding'] = '4vh 2vw 4vh 2vw';
               this.customStyle['--open-padding'] = '0vw 8vw 8vw 8vw';
               this.updateStyles();
@@ -517,6 +656,10 @@ Example:
             //console.log("!!! ** Niks");
         }
       },
+
+      appSelected: function(){
+        console.log("Er is dus geselecteerd op:", this.selectedapp);
+      }
 
 
 
