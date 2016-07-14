@@ -9,6 +9,7 @@ LOCALS
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../locals-object/locals-object.html">
 <link rel="import" href="../locals-object/locals-dataobject.html">
+<link rel="import" href="../locals-loader/locals-dataloader.html">
 
 <!--
 Locals residence : a residence object.
@@ -46,6 +47,7 @@ Example:
         width: 100%;
         @apply(--layout-vertical);
         @apply(--layout-center-center);
+
       }
 
       h1 {
@@ -73,6 +75,8 @@ Example:
         @apply(--layout-start-justified);
         box-sizing: border-box;
         padding: var(--closed-padding);
+        border-bottom: 2px solid rgba(0,0,0,0.05);
+
       }
 
       .previewavatar {
@@ -89,7 +93,10 @@ Example:
 
       .previewvals {
 /*        @apply(--layout-flex);*/
-      max-width: 80%; 
+      width: 100%; 
+      max-width: 80vw; 
+        @apply(--layout-horizontal);
+        @apply(--layout-start);
       }
 
       .previewvals h2 {
@@ -105,7 +112,7 @@ Example:
         @apply(--layout-start);
         @apply(--layout-start-justified);
         box-sizing: border-box;
-        padding: var(--closed-padding);
+        padding: var(--open-padding);
         border-bottom: 2px solid rgba(0,0,0,0.05);
       }
 
@@ -157,9 +164,70 @@ Example:
       .localcoinamount {
         margin: 0px 0px -3px 2px;
       }
+
+      .creating {
+        opacity: 0.5;
+      }
+
+      .creatingmsg {
+        color:var(--locals-blue); 
+        margin: 6px 0px 0px 0px;
+      }
+
+/*      .failed h2 {
+        color:var(--locals-red);
+      }*/
+
+
+      .failedmsg p {
+        color:var(--locals-red);
+        font-size: 14px;
+        line-height: 18px;
+        @apply(--opensans-semibold); 
+        margin: 6px 0px 0px 0px;
+      }
+
+      .failedicon {
+        border-radius: 50px;
+        height: 15px;
+        width: 15px;
+        min-height: 15px;
+        min-width: 15px;
+        @apply(--layout-horizontal);
+        @apply(--layout-center-center);
+        border: 1px solid var(--locals-red);
+        color:var(--locals-red);
+        margin: 10px 20px 0px 10px;
+      }
+
+      .detail {
+        margin: 10px 10px 0px 0px;
+        height: 25px;
+        width: 25px;
+        min-height: 25px;
+        min-width: 25px;
+      }
+
+
       </style>
 
   <template is="dom-if" if="{{_is(renderstate,'closed')}}">
+
+  <template is="dom-if" if="{{_is(status,'creating')}}">
+    <div class="preview">
+      <div class="previewavatar creating">
+      </div>
+      <div class="previewvals creating" on-tap="_toEdit">
+        <h2>{{datastate.name}}</h2>
+      </div>
+      <div class="creatingmsg">
+      <locals-loader small>Creating</locals-loader>
+      </div>
+    </div>
+  </template>
+
+
+  <template is="dom-if" if="{{_is(status,'created')}}">
     <div class="preview">
       <div class="previewavatar">
       </div>
@@ -169,7 +237,40 @@ Example:
     </div>
   </template>
 
+  <template is="dom-if" if="{{_is(status,'failed')}}">
+    <div class="preview">
+      <div class="previewavatar failed">
+      </div>
+      <div class="previewvals failed" on-tap="_toEdit">
+        <h2>{{datastate.name}}</h2>
+        <div class="failedicon">!</div>
+      </div>
+      <div class="failedmsg">
+        <p>Creating failed</p>
+      </div>
+    </div>
+  </template>
+
+  </template>
+
+
+
   <template is="dom-if" if="{{_is(renderstate,'open')}}">
+    <template is="dom-if" if="{{_is(status,'creating')}}">
+      <div class="clubinfototal">
+        <div class="clubavatar">
+        </div>
+        <div class="clubinfo" on-tap="_toEdit">
+          <h2>{{datastate.name}}</h2>
+          <div class="extrainfo">
+            <locals-loader small>Creating your club</locals-loader>
+          </div>
+        </div>
+        </div>
+      </div>
+    </template>
+
+    <template is="dom-if" if="{{_is(status,'created')}}">
       <div class="clubinfototal">
         <div class="clubavatar">
         </div>
@@ -186,6 +287,25 @@ Example:
           </div>
         </div>
       </div>
+    </template>
+
+    <template is="dom-if" if="{{_is(status,'failed')}}">
+      <div class="clubinfototal">
+        <div class="clubavatar">
+        </div>
+        <div class="clubinfo" on-tap="_toEdit">
+          <h2>{{datastate.name}}</h2>
+          <div class="extrainfo">
+            <div class="failedicon detail">!</div>
+            <div class="failedmsg">
+              <p>The creating of your club failed because you're out of LocalCoin, you cheapstake.</p>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </template>
+
 
   </template>
 
@@ -226,6 +346,10 @@ Example:
         },
 
         renderstate: {
+          type: String          
+        },
+
+        status: {
           type: String          
         },
 
@@ -272,6 +396,7 @@ Example:
 
       // Element Lifecycle
       ready: function() {
+        this.status = "creating";
 
         this.dataconfig = {
           fields: [
@@ -368,21 +493,24 @@ Example:
               this.customStyle['--preview-title'] = '20px';
               this.customStyle['--clubname-size'] = '24px';
               this.customStyle['--clubavatar-size'] = '40px';
-              this.customStyle['--closed-padding'] = '6vw';
+              this.customStyle['--closed-padding'] = '4vh 2vw 4vh 2vw';
+              this.customStyle['--open-padding'] = '0vw 8vw 8vw 8vw';
               this.updateStyles();
               break;
             case 'desktop':
               this.customStyle['--preview-title'] = '20px';
               this.customStyle['--clubname-size'] = '30px';
               this.customStyle['--clubavatar-size'] = '48px';
-              this.customStyle['--closed-padding'] = '4vw';
+              this.customStyle['--closed-padding'] = '6vh 2vw 6vh 2vw';
+              this.customStyle['--open-padding'] = '0vw 2vw 2vw 2vw';
               this.updateStyles();
               break;
             case 'xlarge':
               this.customStyle['--preview-title'] = '22px';
               this.customStyle['--clubname-size'] = '36px';
               this.customStyle['--clubavatar-size'] = '48px';
-              this.customStyle['--closed-padding'] = '2vw';
+              this.customStyle['--closed-padding'] = '6vh 2vw 6vh 2vw';
+              this.customStyle['--open-padding'] = '0vw 2vw 2vw 2vw';
               this.updateStyles();
               break;
             default:
