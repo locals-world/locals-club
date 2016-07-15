@@ -38,8 +38,8 @@ Example:
         display: block;
         box-sizing: border-box;
         color: black;
-        --preview-title:20px;
-        --clubname-size:24px;
+        --preview-title:16px;
+        --clubname-size:22px;
         --clubavatar-size:50px;
         --closed-padding: 10px;        
 /*        --valids-color: var(--locals-blue);
@@ -73,7 +73,7 @@ Example:
 
       .preview {
         width: 100%;
-        max-width: 90vw;
+        /*max-width: 90vw;*/
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
@@ -84,27 +84,31 @@ Example:
       }
 
       .previewavatar {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-        min-height: 40px;
+        width:  var(--clubavatar-size);
+        height:  var(--clubavatar-size);
+        min-width:  var(--clubavatar-size);
+        min-height:  var(--clubavatar-size);
         box-sizing: border-box;
-        padding: 10px;
         border-radius: 50%;
+        overflow: hidden;
         margin: 0px 20px 0px 0px;
         background-color: var(--locals-grey1);
+      }
+      .previewavatar img {
+        width: 100%;
+        height: 100%;
       }
 
       .previewvals {
 /*        @apply(--layout-flex);*/
-      width: 100%; 
-      max-width: 80vw; 
+        width: 100%; 
+        max-width: 80vw; 
         @apply(--layout-horizontal);
         @apply(--layout-start);
       }
 
       .previewvals h2 {
-        margin: 5px 0px  0px 0px;
+        margin: 12px 0px  0px 0px;
         @apply(--opensans-light);
         font-size: var(--preview-title);
         color: var(--locals-darkgrey);
@@ -284,6 +288,13 @@ Example:
   <template is="dom-if" if="{{_is(status,'creating')}}">
     <div class="preview">
       <div class="previewavatar creating">
+        <template is="dom-if" if="{{!_is(sizeview,'phone')}}">
+          <locals-icon icon="clubdefault" big></locals-icon>
+        </template>
+        <template is="dom-if" if="{{_is(sizeview,'phone')}}">
+          <locals-icon icon="clubdefault"></locals-icon>
+        </template>
+          <!-- <img src="alsereentjewordtgeuploadkomtdiehier"> -->
       </div>
       <div class="previewvals creating" on-tap="_toEdit">
         <h2>{{datastate.name}}</h2>
@@ -298,6 +309,13 @@ Example:
   <template is="dom-if" if="{{_is(status,'created')}}">
     <div class="preview">
       <div class="previewavatar">
+        <template is="dom-if" if="{{!_is(sizeview,'phone')}}">
+          <locals-icon icon="clubdefault" big></locals-icon>
+        </template>
+        <template is="dom-if" if="{{_is(sizeview,'phone')}}">
+          <locals-icon icon="clubdefault"></locals-icon>
+        </template>
+          <!-- <img src="alsereentjewordtgeuploadkomtdiehier"> -->
       </div>
       <div class="previewvals" on-tap="_toEdit">
         <h2>{{datastate.name}}</h2>
@@ -308,6 +326,8 @@ Example:
   <template is="dom-if" if="{{_is(status,'failed')}}">
     <div class="preview">
       <div class="previewavatar failed">
+          <locals-icon icon="clubdefault"></locals-icon>
+          <!-- <img src="alsereentjewordtgeuploadkomtdiehier"> -->
       </div>
       <div class="previewvals failed" on-tap="_toEdit">
         <h2>{{datastate.name}}</h2>
@@ -342,7 +362,7 @@ Example:
     <template is="dom-if" if="{{_is(status,'created')}}">
       <div class="clubinfototal">
         <div class="clubavatar">
-          <locals-icon icon="club"></locals-icon>
+          <locals-icon icon="clubdefault"></locals-icon>
           <!-- <img src="alsereentjewordtgeuploadkomtdiehier"> -->
         </div>
         <div class="clubinfo" on-tap="_toEdit">
@@ -512,9 +532,6 @@ Example:
       // Element Lifecycle
       ready: function() {
 
-
-          console.log("Hier issem se:", this.$.appselector);
-
         this.status = 'created';
         this.state = 'init';
 
@@ -629,26 +646,26 @@ Example:
     _sizeview: function(){
         switch(this.sizeview) {
             case 'phone':
-              this.customStyle['--preview-title'] = '20px';
-              this.customStyle['--clubname-size'] = '24px';
+              this.customStyle['--preview-title'] = '16px';
+              this.customStyle['--clubname-size'] = '22px';
               this.customStyle['--clubavatar-size'] = '50px';
-              this.customStyle['--closed-padding'] = '4vh 2vw 4vh 2vw';
+              this.customStyle['--closed-padding'] = '2vh 4vw 2vh 4vw';
               this.customStyle['--open-padding'] = '0vw 8vw 8vw 8vw';
               this.updateStyles();
               break;
             case 'desktop':
               this.customStyle['--preview-title'] = '20px';
               this.customStyle['--clubname-size'] = '30px';
-              this.customStyle['--clubavatar-size'] = '48px';
-              this.customStyle['--closed-padding'] = '6vh 2vw 6vh 2vw';
+              this.customStyle['--clubavatar-size'] = '70px';
+              this.customStyle['--closed-padding'] = '4vh 8vw 4vh 8vw';
               this.customStyle['--open-padding'] = '0vw 2vw 2vw 2vw';
               this.updateStyles();
               break;
             case 'xlarge':
               this.customStyle['--preview-title'] = '22px';
               this.customStyle['--clubname-size'] = '36px';
-              this.customStyle['--clubavatar-size'] = '48px';
-              this.customStyle['--closed-padding'] = '6vh 2vw 6vh 2vw';
+              this.customStyle['--clubavatar-size'] = '70px';
+              this.customStyle['--closed-padding'] = '4vh 6vw 4vh 6vw';
               this.customStyle['--open-padding'] = '0vw 2vw 2vw 2vw';
               this.updateStyles();
               break;
