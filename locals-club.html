@@ -8,6 +8,7 @@ LOCALS
 
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../neon-animation/neon-animation.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
 
 <link rel="import" href="../locals-object/locals-object.html">
 <link rel="import" href="../locals-object/locals-dataobject.html">
@@ -38,16 +39,18 @@ Example:
         display: block;
         box-sizing: border-box;
         color: black;
-        --preview-title:16px;
-        --clubname-size:22px;
-        --clubavatar-size:50px;
+        background-color: white;
+        --preview-title:22px;
+        --preview-avatar:50px;
+        --clubname-size:32px;
+        --clubavatar-size:100px;
         --closed-padding: 10px;        
 /*        --valids-color: var(--locals-blue);
         --view-title:24px;
         --view-lineheight:44px;
         --line-height2:28px; 
         --inner-padding: 20px 0px 20px 0px;*/
-        background-color: white;
+        /*background-color: white;*/
         width: 100%;
         @apply(--layout-vertical);
         @apply(--layout-center-center);
@@ -70,24 +73,35 @@ Example:
         @apply(--locals-font-small);
       }
 
+      iron-pages {
+        height: 100%;
+      }
+
+  .whitespace {
+    height: 2vh;
+    min-height: 20px;
+  }
+
 
       .preview {
-        width: 100%;
-        /*max-width: 90vw;*/
+        width: 96%;
+/*        max-width: 90vw; */
+        background-color: var(--locals-grey1);
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
         box-sizing: border-box;
         padding: var(--closed-padding);
-        border-bottom: 2px solid rgba(0,0,0,0.05);
+        margin: 2px;
+        /*border-bottom: 2px solid rgba(0,0,0,0.05);*/
 
       }
 
       .previewavatar {
-        width:  var(--clubavatar-size);
-        height:  var(--clubavatar-size);
-        min-width:  var(--clubavatar-size);
-        min-height:  var(--clubavatar-size);
+        width:  var(--preview-avatar);
+        height:  var(--preview-avatar);
+        min-width:  var(--preview-avatar);
+        min-height:  var(--preview-avatar);
         box-sizing: border-box;
         border-radius: 50%;
         overflow: hidden;
@@ -108,7 +122,7 @@ Example:
       }
 
       .previewvals h2 {
-        margin: 12px 0px  0px 0px;
+        margin: 6px 0px  0px 0px;
         @apply(--opensans-light);
         font-size: var(--preview-title);
         color: var(--locals-darkgrey);
@@ -116,9 +130,9 @@ Example:
 
       .clubinfototal {
         width: 100%;
-        @apply(--layout-horizontal);
-        @apply(--layout-start);
-        @apply(--layout-start-justified);
+        @apply(--layout-vertical);
+        @apply(--layout-center);
+        @apply(--layout-center-justified);
         box-sizing: border-box;
         padding: var(--open-padding);
         background-color: var(--locals-grey1);
@@ -128,9 +142,9 @@ Example:
       .clubinfo {
         width: 100%;
         @apply(--layout-vertical);
-        @apply(--layout-start);
-        @apply(--layout-start-justified);
-        @apply(--layout-flex);
+        @apply(--layout-center);
+/*         @apply(--layout-start-justified);
+        @apply(--layout-flex);*/
 
       }
 
@@ -157,17 +171,19 @@ Example:
 
       .clubinfo h2 {
         @apply(--opensans-light);
-        margin: 0px 0px 10px 0px;
+        margin: 15px 0px 10px 0px;
         font-size: var(--clubname-size);
         color: var(--locals-darkgrey);
+        text-align: center;
       }
 
       .extrainfo {
-        width: 100%;
+        width: auto;
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-start-justified);
         @apply(--layout-wrap);
+        margin: 0px 0px 20px 0px;
 
       }
 
@@ -179,14 +195,13 @@ Example:
         color: var(--locals-blue);
 
       }
-      .clubmembers {
+      .clubdetails {
         color: var(--locals-grey6);
         margin: 0px 15px 0px 15px;
+        text-decoration: underline;
       }
 
-      .clubcreated {
-        
-      }
+
 
       .localcoinamount {
         margin: 0px 0px -3px 2px;
@@ -244,6 +259,8 @@ Example:
       }
 
       .clubcanvas {
+        @apply(--layout-vertical);
+        @apply(--layout-center-center);
         width: 100%;
       }
 
@@ -264,23 +281,20 @@ Example:
 
       iron-selector {
         @apply(--layout-horizontal);
-/*        width: 100%;
-*/      }
+      }
 
       .clubapp {
         width: 55px;
         height: 55px;
-/*        border-radius: 50%;*/
         background-color: transparent;
         opacity: 0.5;
         @apply(--layout-horizontal);
         @apply(--layout-center-center);
       }
 
-      .iron-selected  {
+      .clubappselector .iron-selected {
         background-color: var(--locals-grey2);
-/*        border-bottom: 2px solid var(--locals-blue);
-*/        opacity: 1;
+        opacity: 1;
       }
 
 
@@ -378,18 +392,16 @@ Example:
             <div class="clubmoneys">
               <p>x<locals-icon veryverysmall icon="localcoin" iconcolor="blue" class="localcoinamount"></locals-icon></p>
             </div>
-            <div class="clubmembers">
-            <p>x members</p>
-            </div>
-            <div class="clubcreated">
+            <div class="clubdetails">
+              <p>details</p>
             </div>
           </div>
         </div>
 
 
       </div>
-      <div class="clubapps">
-        <iron-selector attr-for-selected="app" on-iron-select="appSelected" selected="{{selectedapp}}">
+       <div class="clubapps">
+        <iron-selector attr-for-selected="app" on-iron-select="appSelected" selected="{{selectedapp}}" class="clubappselector">
         <div class="clubapp" app="users">
           <locals-icon icon="users" iconcolor="darkgrey" small></locals-icon>
         </div>
@@ -403,29 +415,45 @@ Example:
       </div>
       <div class="clubcontainer">
 
-        <neon-animated-pages attr-for-selected="part" selected="{{selectedapp}}">
-          <neon-animatable part="users">
+        <iron-pages attr-for-selected="part" selected="{{selectedapp}}">
+          <div part="users">
           <div class="clubcanvas">
 
           <template is="dom-if" if="{{_is(state,'init')}}">
-            <p>Do you add-member?</p>
-            <locals-input class="newmember" label="Member code" bind-value="{{membercode}}"></locals-input>
+          <div class="whitespace"></div>
+            <locals-input class="newmember" label="New member code" bind-value="{{membercode}}" center></locals-input>
+            <div class="whitespace"></div>
             <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button> 
           </template>
 
           <template is="dom-if" if="{{_is(state,'waiting')}}">
-          <locals-loader>Waiting on the blockenchain!</locals-loader>
+          <locals-loader small>Retrieving info of new member</locals-loader>
           </template>
+          <div class="whitespace"></div>
+          <div class="whitespace"></div>
 
           </div>
-          </neon-animatable>
-          <neon-animatable>
-          Hier komt babbles
-          </neon-animatable>
-          <neon-animatable>
+          </div>
+          <section part="babbles">
+            <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur sollicitudin magna, rutrum bibendum tellus vulputate id. Pellentesque magna velit, ornare eget elit pulvinar, semper eleifend ipsum. Praesent facilisis lacus nec lorem maximus, vitae fringilla enim elementum. Maecenas gravida vestibulum tortor. Integer molestie maximus urna, in consequat augue ultricies ut. Etiam scelerisque id erat in fringilla. Sed arcu turpis, consequat a ullamcorper eu, commodo eget nibh. Suspendisse nunc velit, pharetra nec volutpat eget, sodales in libero. Pellentesque tempor leo justo, ac malesuada enim varius in.
+
+Pellentesque vestibulum pellentesque tristique. Morbi vulputate orci nunc. Cras mattis hendrerit maximus. Aenean ac quam nec ipsum venenatis sagittis in nec velit. Aenean efficitur urna vulputate iaculis commodo. Praesent a tortor convallis, finibus nunc sed, dictum augue. Nam finibus iaculis sollicitudin. In ut blandit augue, quis scelerisque eros. Donec pellentesque faucibus facilisis. Proin tincidunt maximus enim. Aliquam erat volutpat. Praesent vel pellentesque lorem, nec facilisis est. Mauris molestie, dolor ut tempor viverra, quam dolor finibus turpis, in venenatis ligula ligula in nisl.
+
+Quisque volutpat enim eget rhoncus dapibus. Ut sed magna at sem mollis luctus nec a urna. Integer porttitor nunc lectus, aliquam laoreet nibh cursus vel. Suspendisse tempor massa nec massa sollicitudin, at porttitor orci pretium. Nulla lectus magna, iaculis quis turpis id, porta fringilla leo. Ut pellentesque accumsan pulvinar. Integer in dapibus nunc, at blandit ante.
+
+Vestibulum ac metus nunc. Suspendisse leo nisl, mollis in ullamcorper quis, feugiat id est. Sed felis ipsum, viverra sit amet ligula sed, sodales cursus odio. Aenean finibus suscipit eleifend. Interdum et malesuada fames ac ante ipsum primis in faucibus. In odio augue, imperdiet non fermentum a, blandit at mauris. Praesent convallis est mollis tellus ullamcorper cursus. Praesent et est eu libero posuere condimentum ut ut metus. In tortor ligula, auctor eu felis id, feugiat suscipit libero. Ut tincidunt varius augue et pulvinar. Fusce nec dignissim est, non commodo erat. Etiam finibus lectus elit, fermentum ornare nulla ultrices id. Aliquam erat volutpat. Quisque bibendum enim nulla, eget hendrerit ex congue a. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+
+Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dictum ligula euismod in. Sed id enim eget risus tempor placerat quis sit amet mi. Aliquam id libero lacus. Duis ut est iaculis, lacinia felis varius, elementum felis. Etiam at diam in est rhoncus pharetra. Vestibulum eget sem hendrerit, vestibulum nisi in, mollis nisi. In feugiat tristique euismod. Donec id sapien sed velit semper dictum. Nulla mi mauris, mattis vitae posuere eget, tempor in enim. Nulla sit amet lacus quam. Sed laoreet nisl id arcu hendrerit iaculis.
+              
+            </p>
+<div class="whitespace"></div>
+
+          </section>
+          <section>
           Hier komt voting
-          </neon-animatable>
-        </neon-animated-pages>
+          </section>
+        </iron-pages>
       </div>
     </template>
 
@@ -677,9 +705,9 @@ Example:
             // console.log("!!! ** Niks",this.phoneview, this.desktopview, this.xlargeview);
 
       if (this.phoneview) {
-              this.customStyle['--preview-title'] = '16px';
-              this.customStyle['--clubname-size'] = '22px';
-              this.customStyle['--clubavatar-size'] = '50px';
+              this.customStyle['--preview-title'] = '22px';
+              this.customStyle['--clubname-size'] = '32px';
+              this.customStyle['--clubavatar-size'] = '100px';
               this.customStyle['--closed-padding'] = '4vh 6vw 4vh 6vw';
               this.customStyle['--open-padding'] = '0vw 8vw 8vw 8vw';
               this.updateStyles();        
@@ -688,9 +716,9 @@ Example:
       }
 
       if (this.desktopview) {
-              this.customStyle['--preview-title'] = '16px';
-              this.customStyle['--clubname-size'] = '22px';
-              this.customStyle['--clubavatar-size'] = '50px';
+              this.customStyle['--preview-title'] = '22px';
+              this.customStyle['--clubname-size'] = '32px';
+              this.customStyle['--clubavatar-size'] = '100px';
               this.customStyle['--closed-padding'] = '3vh 8vw 3vh 8vw';
               this.customStyle['--open-padding'] = '0vw 2vw 2vw 2vw';
               this.updateStyles();    
