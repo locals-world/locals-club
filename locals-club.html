@@ -25,7 +25,7 @@ Example:
       visualstate="{{visualstate}}"
       datastate="{{datastate}}"
       on-visual-state-changed="visualstateupdated"
-      on-data-state-changed="datastateupdated">     
+      on-data-state-changed="datastateupdated">
     </locals-club>
 
 @demo demo/index.html
@@ -48,7 +48,7 @@ Example:
 /*        --valids-color: var(--locals-blue);
         --view-title:24px;
         --view-lineheight:44px;
-        --line-height2:28px; 
+        --line-height2:28px;
         --inner-padding: 20px 0px 20px 0px;*/
         /*background-color: white;*/
         width: 100%;
@@ -115,8 +115,8 @@ Example:
 
       .previewvals {
 /*        @apply(--layout-flex);*/
-        width: 100%; 
-        max-width: 80vw; 
+        width: 100%;
+        max-width: 80vw;
         @apply(--layout-horizontal);
         @apply(--layout-start);
       }
@@ -188,7 +188,7 @@ Example:
       }
 
       .extrainfo p {
-        font-size: 14px;        
+        font-size: 14px;
       }
 
       .clubmoneys {
@@ -202,7 +202,6 @@ Example:
       }
 
 
-
       .localcoinamount {
         margin: 0px 0px -3px 2px;
       }
@@ -212,7 +211,7 @@ Example:
       }
 
       .creatingmsg {
-        color:var(--locals-blue); 
+        color:var(--locals-blue);
         margin: 6px 0px 0px 0px;
       }
 
@@ -225,7 +224,7 @@ Example:
         color:var(--locals-red);
         font-size: 14px;
         line-height: 18px;
-        @apply(--opensans-semibold); 
+        @apply(--opensans-semibold);
         margin: 6px 0px 0px 0px;
       }
 
@@ -516,11 +515,11 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         },
 
         renderstate: {
-          type: String          
+          type: String
         },
 
         status: {
-          type: String          
+          type: String
         },
 
         sizeview: {
@@ -561,7 +560,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
       },
 
       _newblock: function(){
-       
+
       },
 
       _is: function(a, b) {
@@ -603,14 +602,14 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
           ]
         };
 
-        this.config = 
-{ layers: 
+        this.config =
+{ layers:
    [ { name: 'club',
        icon: this.resolveUrl("./images/residence-icon.png"),
        iconselected: this.resolveUrl("./images/residence-icon-selected.png"),
        variants: [ 'basic', 'hirise', 'lorise', 'mansion' ],
        colors: [ 'nocolor' ],
-       images: 
+       images:
         { 'basic-nocolor': this.resolveUrl("./images/0-residence-residence-basic-nocolor.png"),
           'hirise-nocolor': this.resolveUrl("./images/0-residence-residence-hirise-nocolor.png"),
           'lorise-nocolor': this.resolveUrl("./images/0-residence-residence-lorise-nocolor.png"),
@@ -654,7 +653,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         // if (this.renderstate !== 'dataview'){
         //   user.addEventListener('newblock', function() {
         //     var validations = self.$.ldataobject.getValidations();
-        //   });          
+        //   });
         // }
       },
 
@@ -710,9 +709,9 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
               this.customStyle['--clubavatar-size'] = '100px';
               this.customStyle['--closed-padding'] = '4vh 6vw 4vh 6vw';
               this.customStyle['--open-padding'] = '0vw 8vw 8vw 8vw';
-              this.updateStyles();        
+              this.updateStyles();
               this.desktopview = false;
-              this.xlargeview = false;   
+              this.xlargeview = false;
       }
 
       if (this.desktopview) {
@@ -721,9 +720,9 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
               this.customStyle['--clubavatar-size'] = '100px';
               this.customStyle['--closed-padding'] = '3vh 8vw 3vh 8vw';
               this.customStyle['--open-padding'] = '0vw 2vw 2vw 2vw';
-              this.updateStyles();    
+              this.updateStyles();
               this.phoneview = false;
-              this.xlargeview = false;  
+              this.xlargeview = false;
       }
 
       if (this.xlargeview) {
@@ -734,7 +733,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
               this.customStyle['--open-padding'] = '0vw 2vw 2vw 2vw';
               this.updateStyles();
               this.phoneview = false;
-              this.desktopview = false;  
+              this.desktopview = false;
       }
 
     },
