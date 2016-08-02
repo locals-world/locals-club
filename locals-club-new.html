@@ -360,11 +360,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.createClub(function(err, res) {
             if (err){
               console.log('Error creating club....');
-              delete lsapi.data.collection[clubid];
+              lsapi.data.collection[clubid].status = 'failed';
               lsapi.writeData();               
             }else{
-              console.log('createClub is gebeurd...', res);
+              console.log('createClub is gebeurd... club adres=', res);
               lsapi.data.collection[clubid].status = 'created';
+              lsapi.data.collection[clubid].contractaddress = res;
               lsapi.writeData();               
             }
           });
@@ -402,39 +403,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   console.log('Createclub txhash=', txhash);
 
 
-var event = myContractInstance.ClubCreated(null,null,null,function(error, result){
-debugger;
-  if (!error){
-    console.log(result);
-  }
+                  var event = myContractInstance.ClubCreated(null, null, null, function(error, result){                    
+                    if (result && result.transactionHash === txhash) {
+                      console.log('club created YAY');
+                      cb(null, result.args._newClub);
+                    }
+                  });
 
-  if (result && result.transactionHash === txhash){
-    console.log('club created YAY');
-  }
-
-
-});
-
-
-
-
-//debugger;
-                  // this.waitTx(result, function(success) {
-                  //   if (!success) {
-                  //     console.log('waitTX failed');
-                  //   } else {
-                  //     console.log('mined TXhash', result);
-                  //     cb(null, result);
-                  //   }
-                  //   cb(success);
-                  // }.bind(this))
+                  // if the above event does not arrive in time - set the club creation to failed...
+                  this.waitTx(txhash, function(success) {
+                    if (!success) {
+                      cb('timeout');
+                      //                    console.log('waitTX failed');
+                    } else {
+                      console.log('mined TXhash', txhash);
+                      //                    cb(null, result);
+                    }
+                    //                  cb(success);
+                  }.bind(this));
 
 
                 }
               }.bind(this));
           }.bind(this));
         }.bind(this));
-
 
       },
 
