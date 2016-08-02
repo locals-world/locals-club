@@ -12,7 +12,6 @@ LOCALS
 
 <link rel="import" href="../locals-object/locals-object.html">
 <link rel="import" href="../locals-object/locals-dataobject.html">
-<link rel="import" href="../locals-loader/locals-dataloader.html">
 <link rel="import" href="../locals-input/locals-input.html">
 <link rel="import" href="../locals-button/locals-button.html">
 
@@ -84,16 +83,14 @@ Example:
 
 
       .preview {
-        width: 96%;
-/*        max-width: 90vw; */
+        width: 100%;
         background-color: var(--locals-grey1);
         @apply(--layout-horizontal);
         @apply(--layout-start);
         @apply(--layout-start-justified);
         box-sizing: border-box;
         padding: var(--closed-padding);
-        margin: 2px;
-        /*border-bottom: 2px solid rgba(0,0,0,0.05);*/
+        border-bottom: 1px solid rgba(0,0,0,0.05);
 
       }
 
@@ -317,7 +314,7 @@ Example:
         </template> -->
         <img src="images/localsclub-default-3c.png">
       </div>
-      <div class="previewvals creating" on-tap="_toEdit">
+      <div class="previewvals creating">
         <h2>{{datastate.name}}</h2>
       </div>
       <div class="creatingmsg">
@@ -338,7 +335,7 @@ Example:
         </template> -->
         <img src="images/localsclub-default-3c.png">
       </div>
-      <div class="previewvals" on-tap="_toEdit">
+      <div class="previewvals">
         <h2>{{datastate.name}}</h2>
       </div>
     </div>
@@ -350,7 +347,7 @@ Example:
 <!--           <locals-icon icon="clubdefault"></locals-icon>
  -->        <img src="images/localsclub-default-3c.png">
       </div>
-      <div class="previewvals failed" on-tap="_toEdit">
+      <div class="previewvals failed">
         <h2>{{datastate.name}}</h2>
         <div class="failedicon">!</div>
       </div>
@@ -370,7 +367,7 @@ Example:
         <div class="clubavatar">
         <img src="images/localsclub-default-3c.png">
         </div>
-        <div class="clubinfo" on-tap="_toEdit">
+        <div class="clubinfo">
           <h2>{{datastate.name}}</h2>
           <div class="extrainfo">
             <locals-loader small>Creating your club</locals-loader>
@@ -385,7 +382,7 @@ Example:
         <div class="clubavatar">
         <img src="images/localsclub-default-3c.png">
         </div>
-        <div class="clubinfo" on-tap="_toEdit">
+        <div class="clubinfo">
           <h2>{{datastate.name}}</h2>
           <div class="extrainfo">
             <div class="clubmoneys">
@@ -462,7 +459,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         <img src="images/localsclub-default-3c.png">
 
         </div>
-        <div class="clubinfo" on-tap="_toEdit">
+        <div class="clubinfo">
           <h2>{{datastate.name}}</h2>
           <div class="extrainfo">
             <div class="failedicon detail">!</div>
@@ -528,7 +525,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
 
         selectedapp: {
           type: String,
-          value: 'users'
+          value: 'babbles'
         },
 
         objectdata: {
@@ -675,7 +672,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
       },
 
       _datastate: function() {
-        console.log("HIIIIEERPPPP", JSON.stringify(this.datastate));
+        // console.log("HIIIIEERPPPP", JSON.stringify(this.datastate));
       },
 
       toWaiting: function(){
@@ -774,7 +771,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
     //   },
 
       appSelected: function(){
-        console.log("Er is dus geselecteerd op:", this.selectedapp);
+        // console.log("Er is dus geselecteerd op:", this.selectedapp);
       }
 
 
