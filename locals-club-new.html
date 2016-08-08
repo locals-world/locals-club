@@ -396,7 +396,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             console.log('got gas price: ', gasPrice);
             var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
             var myContractInstance = MyContract.at(this.localsstorecontractaddress);
-            //debugger;
+            debugger;
             result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "clubicon", {
                 from: app.helpers.fixaddress(this.web3wallet.account),
                 gasPrice: gasPrice,
