@@ -245,7 +245,21 @@ Example:
         min-width: 25px;
       }
 
+      .avatar {
+        width:70px;
+        height: 70px;
+        border-radius: 50%;
+        overflow: hidden;
+        background-color: transparent;
 
+      }
+
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        border: none;
+
+      }
 
       .clubcontainer  {
         width: 100%;
@@ -425,6 +439,11 @@ Example:
             <locals-input class="newmember" label="New member code" bind-value="{{membercode}}" center></locals-input>
             <div class="whitespace"></div>
             <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button>
+            <template is="dom-repeat" items="{{memberlist}}">
+              <div class="avatar" id="avatar">
+                <img src="{{item.avatar}}">
+              </div> <span>{{item.username}}</span>
+            </template>
           </template>
 
           <template is="dom-if" if="{{_is(state,'waiting')}}">
@@ -531,6 +550,22 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         selectedapp: {
           type: String,
           value: 'babbles'
+        },
+
+        contractaddress: {
+          type: String,
+          observer: '_contractaddress'
+        },
+
+        numMembers: {
+          type: Number,
+          observer: '_numMembers'
+        },
+
+        memberlist: {
+          type: Array,
+          value: [],
+          observer: '_memberlist'
         },
 
         objectdata: {
@@ -668,6 +703,79 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         //
         // Use this to clean up anything you did in `attached`.
       },
+
+      _contractaddress: function(){
+        console.log('Club got contract: ',this.contractaddress);
+        this.web3wallet = document.querySelector('web3-wallet');
+        //this.amount = 1;
+        var self = this;
+
+        this.contracturl = this.resolveUrl('../../contracts/localsClub.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+             self.web3wallet.web3.eth.getGasPrice(function(err, result){
+            var gasPrice = result.toNumber(10);
+          console.log('gasprice: ', gasPrice);
+
+          var MyContract = self.web3wallet.web3.eth.contract(self.contractjson.abi);
+          var myContractInstance = MyContract.at(self.contractaddress);
+            console.log('Reading contract ',self.contractaddress);
+            var numMembers = myContractInstance.numMembers().toNumber();
+            console.log('found members: ', numMembers);
+            self.numMembers = numMembers;
+          });
+          //this.web3.send(this.partnerpubkey, this.amount);
+        });
+      },
+
+      _numMembers: function(){
+        // get all members
+        var self = this;
+        console.log(this.numMembers);
+
+        var MyContract = this.web3wallet.web3.eth.contract(this.contractjson.abi);
+        var myContractInstance = MyContract.at(this.contractaddress);
+        this.memberlist = [];
+        for (var i = 0; i < this.numMembers; i++) {
+          var memberaddress = myContractInstance.members(i);
+          var username = self._getUsername(memberaddress,function(username, avatarurl){
+              self.push('memberlist', {
+                'username': username, 'avatar': avatarurl
+         });
+            });
+          //this.push('memberlist', { memberaddress });
+          console.log('pushing to memberlist: ', i, ' - ',memberaddress);
+        }
+      },
+
+      _memberlist: function(){
+        console.log(this.memberlist);
+      },
+
+      _getUsername: function(account, cb){
+       var getuser = document.querySelector("locals-getuser");
+       var self = this;
+       var userinfo = getuser.userlookup(account, function(info){
+         console.log('wallet kent users: ', info.username);
+         var ipfsurl = self._getipfsurl(info.avatar, function(result){
+           cb(info.username, result);
+         });
+       });
+     },
+
+     _getipfsurl: function(hash, cb){
+     //debugger;
+     this._initipfs();
+     cb(this.ipfs_url + hash);
+   },
+
+   _initipfs: function(){
+     if (!this.ipfs_url){
+       this.ipfs_url = new Polymer.IronMetaQuery({
+           key: 'ipfs_url'
+         }).value;
+     }
+   },
 
       _visualstatechanged: function(e) {
         //console.log('Visual state changed');
