@@ -421,6 +421,7 @@ Example:
 
           <template is="dom-if" if="{{_is(state,'init')}}">
           <div class="whitespace"></div>
+            <h2>I am <span>{{contractaddress}}</span></h2>
             <locals-input class="newmember" label="New member code" bind-value="{{membercode}}" center></locals-input>
             <div class="whitespace"></div>
             <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button>
@@ -701,7 +702,8 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
             if(m.command=='pubkeyforclub'){
               console.log('got pub key: ', m.pubkey);
               // start transaction here.
-              self.addClubMember(m.pubkey, from, function(){
+              self.addClubMember(m.pubkey, from, function(err, res){
+                console.log('add clubmember ',err, res);
                 self.whisper.whisperpost(from, JSON.stringify({
                         'command': 'clubadd',
                         'from': this.whisper.topic,
@@ -720,7 +722,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
             //this.amount = 1;
             var self = this;
 
-            this.contracturl = this.resolveUrl('../../contracts/localsCointoken.json');
+            this.contracturl = this.resolveUrl('../../contracts/localsClub.json');
             this.importHref(this.contracturl, function(e) {
               this.contractjson = JSON.parse(e.target.import.body.innerText);
                  self.web3wallet.web3.eth.getGasPrice(function(err, result){
@@ -728,17 +730,17 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
               console.log('gasprice: ', gasPrice);
 
               var MyContract = self.web3wallet.web3.eth.contract(self.contractjson.abi);
-              var myContractInstance = MyContract.at(self.contractaddr);
-                console.log('doing transfer of ',amount,' LC to: ', pubkey, 'from: ', self.web3wallet.account);
-                myContractInstance.transfer.sendTransaction(pubkey, amount, {
-                  from: self.fixaddress(self.web3wallet.account),
+              var myContractInstance = MyContract.at(self.contractaddress);
+                console.log('initiating membership of ',pubkey, ' at contract ', self.contractaddress, 'from: ', self.web3wallet.account);
+                myContractInstance.addMember.sendTransaction(pubkey, 'nick', {
+                  from: app.helpers.fixaddress(self.web3wallet.account),
                   gasPrice: gasPrice,
                   gasLimit: 3000000,
                   gas: 2000000
                 }, function(err, result){
                   console.log(err, result);
-                  var coinbalance = myContractInstance.balanceOf(self.fixaddress(self.web3wallet.account));
-                    self.localcoinbalance = coinbalance;
+                  //var coinbalance = myContractInstance.balanceOf(self.fixaddress(self.web3wallet.account));
+                    //self.localcoinbalance = coinbalance;
                     if (cb){
                       cb(err,result);
                     }
