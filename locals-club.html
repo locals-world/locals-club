@@ -43,7 +43,7 @@ Example:
         --preview-avatar:50px;
         --clubname-size:32px;
         --clubavatar-size:100px;
-        --closed-padding: 10px;        
+        --closed-padding: 10px;
 /*        --valids-color: var(--locals-blue);
         --view-title:24px;
         --view-lineheight:44px;
@@ -340,6 +340,7 @@ Example:
         <img src="images/localsclub-default-3c.png">
       </div>
       <div class="previewvals">
+        <h1>{{contractaddress}}</h1>
         <h2>{{datastate.name}}</h2>
       </div>
     </div>
@@ -422,7 +423,7 @@ Example:
           <div class="whitespace"></div>
             <locals-input class="newmember" label="New member code" bind-value="{{membercode}}" center></locals-input>
             <div class="whitespace"></div>
-            <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button> 
+            <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button>
           </template>
 
           <template is="dom-if" if="{{_is(state,'waiting')}}">
@@ -444,7 +445,7 @@ Quisque volutpat enim eget rhoncus dapibus. Ut sed magna at sem mollis luctus ne
 Vestibulum ac metus nunc. Suspendisse leo nisl, mollis in ullamcorper quis, feugiat id est. Sed felis ipsum, viverra sit amet ligula sed, sodales cursus odio. Aenean finibus suscipit eleifend. Interdum et malesuada fames ac ante ipsum primis in faucibus. In odio augue, imperdiet non fermentum a, blandit at mauris. Praesent convallis est mollis tellus ullamcorper cursus. Praesent et est eu libero posuere condimentum ut ut metus. In tortor ligula, auctor eu felis id, feugiat suscipit libero. Ut tincidunt varius augue et pulvinar. Fusce nec dignissim est, non commodo erat. Etiam finibus lectus elit, fermentum ornare nulla ultrices id. Aliquam erat volutpat. Quisque bibendum enim nulla, eget hendrerit ex congue a. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
 
 Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dictum ligula euismod in. Sed id enim eget risus tempor placerat quis sit amet mi. Aliquam id libero lacus. Duis ut est iaculis, lacinia felis varius, elementum felis. Etiam at diam in est rhoncus pharetra. Vestibulum eget sem hendrerit, vestibulum nisi in, mollis nisi. In feugiat tristique euismod. Donec id sapien sed velit semper dictum. Nulla mi mauris, mattis vitae posuere eget, tempor in enim. Nulla sit amet lacus quam. Sed laoreet nisl id arcu hendrerit iaculis.
-              
+
             </p>
 <div class="whitespace"></div>
 
@@ -683,24 +684,72 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
 
       toWaiting: function(){
           var self = this;
-          this.whisper = document.querySelector('locals-whisperer');
-          this.handler = document.querySelector('locals-verification-validator');
+          this.whisper = document.querySelector('#whisper');
+          //this.handler = document.querySelector('locals-verification-validator');
           console.log('ADD MEMBER: ',this.membercode);
           this.whisper.whisperpost(this.membercode, JSON.stringify({
-                  'command': 'requestpubkey',
+                  'command': 'requestpubkeyforclub',
                   'from': this.whisper.topic,
                   'data': null
                 }));
           this.state = 'waiting';
-          this.handler.addEventListener('pub-key', function(e){
-            console.log('got pub key: ', e.detail);
-            self.partnerpubkey = e.detail;
+          this.whisper.addEventListener('message-received', function(e){
+            console.log('CLUB LISTENER GETS', e.detail.message);
+            var m = JSON.parse(e.detail.message);
+            var from = e.detail.from;
 
-            /* SPONNETRAKET: Hier de transactie doen!!!!!! */
-           console.log("Ich hemmem!", self.partnerpubkey);
-
+            if(m.command=='pubkeyforclub'){
+              console.log('got pub key: ', m.pubkey);
+              // start transaction here.
+              self.addClubMember(m.pubkey, from, function(){
+                self.whisper.whisperpost(from, JSON.stringify({
+                        'command': 'clubadd',
+                        'from': this.whisper.topic,
+                        'data': null
+                      }));
+              });
+              //self.partnerpubkey = e.detail;
+            };
          });
         },
+
+        addClubMember: function(pubkey, from, cb){
+            //debugger;
+            // we gaan dan wat geld versjassen
+            this.web3wallet = document.querySelector('web3-wallet');
+            //this.amount = 1;
+            var self = this;
+
+            this.contracturl = this.resolveUrl('../../contracts/localsCointoken.json');
+            this.importHref(this.contracturl, function(e) {
+              this.contractjson = JSON.parse(e.target.import.body.innerText);
+                 self.web3wallet.web3.eth.getGasPrice(function(err, result){
+                var gasPrice = result.toNumber(10);
+              console.log('gasprice: ', gasPrice);
+
+              var MyContract = self.web3wallet.web3.eth.contract(self.contractjson.abi);
+              var myContractInstance = MyContract.at(self.contractaddr);
+                console.log('doing transfer of ',amount,' LC to: ', pubkey, 'from: ', self.web3wallet.account);
+                myContractInstance.transfer.sendTransaction(pubkey, amount, {
+                  from: self.fixaddress(self.web3wallet.account),
+                  gasPrice: gasPrice,
+                  gasLimit: 3000000,
+                  gas: 2000000
+                }, function(err, result){
+                  console.log(err, result);
+                  var coinbalance = myContractInstance.balanceOf(self.fixaddress(self.web3wallet.account));
+                    self.localcoinbalance = coinbalance;
+                    if (cb){
+                      cb(err,result);
+                    }
+                });
+
+              });
+              //this.web3.send(this.partnerpubkey, this.amount);
+            });
+            this.sendcoinstate = 'first';
+          },
+
 
     _sizeview: function(){
 
