@@ -81,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         border-radius: 50%;
         width: 100px;
         height: 100px;
-        overflow: hidden; 
+        overflow: hidden;
       }
 
       .typeicon img {
@@ -91,7 +91,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         .selectedtype h1 {
           /*margin-top: -20px;*/
-          text-align: center;          
+          text-align: center;
         }
 
         .clubname {
@@ -220,7 +220,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
     </style>
-    
+
       <div class="total">
 
       <div class="selectedtype">
@@ -241,7 +241,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="currentconfig">
         <div class="configitem">
           <locals-icon verysmall icon="users" iconcolor="grey7" class="itemicon"></locals-icon>
-          <div class="configitemdescr">        
+          <div class="configitemdescr">
             <p>A new member must be added by the creator.</p>
             <p>A member can be removed from the club by the creator.</p>
             <a href="" class="changeconfig">Change this config</a>
@@ -249,8 +249,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
 
         <div class="configitem">
-          <locals-icon verysmall icon="voting" iconcolor="grey7"  class="itemicon"></locals-icon>        
-          <div class="configitemdescr">        
+          <locals-icon verysmall icon="voting" iconcolor="grey7"  class="itemicon"></locals-icon>
+          <div class="configitemdescr">
             <p>Every member can make a new proposal (cost 2<locals-icon veryverysmall icon="localcoin" iconcolor="darkgrey" class="localcoinamount"></locals-icon>).</p>
             <p>To pass a proposal as valid, the quotum of 80% of all voters should be reached.</p>
             <a href="" class="changeconfig">Change this config</a>
@@ -258,8 +258,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
 
         <div class="configitem">
-          <locals-icon verysmall icon="babbles" iconcolor="grey7"  class="itemicon"></locals-icon>        
-          <div class="configitemdescr">        
+          <locals-icon verysmall icon="babbles" iconcolor="grey7"  class="itemicon"></locals-icon>
+          <div class="configitemdescr">
             <p>Every member can join the clubs public chatroom.</p>
           </div>
         </div>
@@ -279,7 +279,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="whitespace"></div>
 
       <locals-button on-tap="confirm" bg="blue" icon="v" txtcolor="white" small></locals-button>
-<!-- 
+<!--
        <div class="descr">
         <ul>
           <li>The creator can add and remove members.</li>
@@ -320,7 +320,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       ready: function(){
-       
+
       },
 
       attached: function() {
@@ -352,7 +352,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         lsapi.data.collection[clubid] = {
             "status": "creating",
             "component": {
-              "name": "locals-club",
+              "name": "locals-club"
 //              "contract": "0x000"
             },
             "data":{
@@ -362,7 +362,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               [[0,0]]
             };
 //        debugger;
-        lsapi.writeData(); 
+        lsapi.writeData();
 
 
         this.approveAndCall(function(err, res) {
@@ -371,12 +371,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             if (err){
               console.log('Error creating club....');
               lsapi.data.collection[clubid].status = 'failed';
-              lsapi.writeData();               
+              lsapi.writeData();
             }else{
               console.log('createClub is gebeurd... club adres=', res);
               lsapi.data.collection[clubid].status = 'created';
               lsapi.data.collection[clubid].contractaddress = res;
-              lsapi.writeData();               
+              lsapi.writeData();
             }
           });
         }.bind(this));
@@ -390,14 +390,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var contracturl = this.resolveUrl('../../contracts/localsStore.json');
         this.importHref(contracturl, function(e) {
           var contractjson = JSON.parse(e.target.import.body.innerText);
-          //console.log(this.contractjson);
+          console.log(this.contractjson);
           this.web3wallet.web3.eth.getGasPrice(function(err, result) {
             var gasPrice = result.toNumber(10);
+            console.log('got gas price: ', gasPrice);
             var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
             var myContractInstance = MyContract.at(this.localsstorecontractaddress);
-            //debugger;
+            debugger;
             result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "clubicon", {
-                from: this.fixaddress(this.web3wallet.account),
+                from: app.helpers.fixaddress(this.web3wallet.account),
                 gasPrice: gasPrice,
                 gasLimit: 3000000,
                 gas: 3000000,
@@ -412,8 +413,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   console.log('Createclub Successful!');
                   console.log('Createclub txhash=', txhash);
 
-
-                  var event = myContractInstance.ClubCreated(null, null, null, function(error, result){                    
+                  var event = myContractInstance.ClubCreated(null, null, null, function(error, result){
                     if (result && result.transactionHash === txhash) {
                       console.log('club created YAY');
                       cb(null, result.args._newClub);
@@ -443,9 +443,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       approveAndCall: function(cb){
         console.log('create a club',this.clubname);
 
-    
+
       console.log('Mijn account: ', this.fixaddress(this.web3wallet.account));
-  
+
       this.contracturl = this.resolveUrl('../../contracts/localsCointoken.json');
       this.importHref(this.contracturl, function(e) {
         this.contractjson = JSON.parse(e.target.import.body.innerText);
