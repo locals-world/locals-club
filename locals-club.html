@@ -43,7 +43,7 @@ Example:
         --preview-avatar:50px;
         --clubname-size:32px;
         --clubavatar-size:100px;
-        --closed-padding: 10px;        
+        --closed-padding: 10px;
 /*        --valids-color: var(--locals-blue);
         --view-title:24px;
         --view-lineheight:44px;
@@ -245,7 +245,21 @@ Example:
         min-width: 25px;
       }
 
+      .avatar {
+        width:70px;
+        height: 70px;
+        border-radius: 50%;
+        overflow: hidden;
+        background-color: transparent;
 
+      }
+
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        border: none;
+
+      }
 
       .clubcontainer  {
         width: 100%;
@@ -340,6 +354,7 @@ Example:
         <img src="images/localsclub-default-3c.png">
       </div>
       <div class="previewvals">
+        <h1>{{contractaddress}}</h1>
         <h2>{{datastate.name}}</h2>
       </div>
     </div>
@@ -420,9 +435,15 @@ Example:
 
           <template is="dom-if" if="{{_is(state,'init')}}">
           <div class="whitespace"></div>
+            <h2>I am <span>{{contractaddress}}</span></h2>
             <locals-input class="newmember" label="New member code" bind-value="{{membercode}}" center></locals-input>
             <div class="whitespace"></div>
-            <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button> 
+            <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button>
+            <template is="dom-repeat" items="{{memberlist}}">
+              <div class="avatar" id="avatar">
+                <img src="{{item.avatar}}">
+              </div> <span>{{item.username}}</span>
+            </template>
           </template>
 
           <template is="dom-if" if="{{_is(state,'waiting')}}">
@@ -444,7 +465,7 @@ Quisque volutpat enim eget rhoncus dapibus. Ut sed magna at sem mollis luctus ne
 Vestibulum ac metus nunc. Suspendisse leo nisl, mollis in ullamcorper quis, feugiat id est. Sed felis ipsum, viverra sit amet ligula sed, sodales cursus odio. Aenean finibus suscipit eleifend. Interdum et malesuada fames ac ante ipsum primis in faucibus. In odio augue, imperdiet non fermentum a, blandit at mauris. Praesent convallis est mollis tellus ullamcorper cursus. Praesent et est eu libero posuere condimentum ut ut metus. In tortor ligula, auctor eu felis id, feugiat suscipit libero. Ut tincidunt varius augue et pulvinar. Fusce nec dignissim est, non commodo erat. Etiam finibus lectus elit, fermentum ornare nulla ultrices id. Aliquam erat volutpat. Quisque bibendum enim nulla, eget hendrerit ex congue a. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
 
 Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dictum ligula euismod in. Sed id enim eget risus tempor placerat quis sit amet mi. Aliquam id libero lacus. Duis ut est iaculis, lacinia felis varius, elementum felis. Etiam at diam in est rhoncus pharetra. Vestibulum eget sem hendrerit, vestibulum nisi in, mollis nisi. In feugiat tristique euismod. Donec id sapien sed velit semper dictum. Nulla mi mauris, mattis vitae posuere eget, tempor in enim. Nulla sit amet lacus quam. Sed laoreet nisl id arcu hendrerit iaculis.
-              
+
             </p>
 <div class="whitespace"></div>
 
@@ -529,6 +550,22 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         selectedapp: {
           type: String,
           value: 'babbles'
+        },
+
+        contractaddress: {
+          type: String,
+          observer: '_contractaddress'
+        },
+
+        numMembers: {
+          type: Number,
+          observer: '_numMembers'
+        },
+
+        memberlist: {
+          type: Array,
+          value: [],
+          observer: '_memberlist'
         },
 
         objectdata: {
@@ -667,6 +704,79 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         // Use this to clean up anything you did in `attached`.
       },
 
+      _contractaddress: function(){
+        console.log('Club got contract: ',this.contractaddress);
+        this.web3wallet = document.querySelector('web3-wallet');
+        //this.amount = 1;
+        var self = this;
+
+        this.contracturl = this.resolveUrl('../../contracts/localsClub.json');
+        this.importHref(this.contracturl, function(e) {
+          this.contractjson = JSON.parse(e.target.import.body.innerText);
+             self.web3wallet.web3.eth.getGasPrice(function(err, result){
+            var gasPrice = result.toNumber(10);
+          console.log('gasprice: ', gasPrice);
+
+          var MyContract = self.web3wallet.web3.eth.contract(self.contractjson.abi);
+          var myContractInstance = MyContract.at(self.contractaddress);
+            console.log('Reading contract ',self.contractaddress);
+            var numMembers = myContractInstance.numMembers().toNumber();
+            console.log('found members: ', numMembers);
+            self.numMembers = numMembers;
+          });
+          //this.web3.send(this.partnerpubkey, this.amount);
+        });
+      },
+
+      _numMembers: function(){
+        // get all members
+        var self = this;
+        console.log(this.numMembers);
+
+        var MyContract = this.web3wallet.web3.eth.contract(this.contractjson.abi);
+        var myContractInstance = MyContract.at(this.contractaddress);
+        this.memberlist = [];
+        for (var i = 0; i < this.numMembers; i++) {
+          var memberaddress = myContractInstance.members(i);
+          var username = self._getUsername(memberaddress,function(username, avatarurl){
+              self.push('memberlist', {
+                'username': username, 'avatar': avatarurl
+         });
+            });
+          //this.push('memberlist', { memberaddress });
+          console.log('pushing to memberlist: ', i, ' - ',memberaddress);
+        }
+      },
+
+      _memberlist: function(){
+        console.log(this.memberlist);
+      },
+
+      _getUsername: function(account, cb){
+       var getuser = document.querySelector("locals-getuser");
+       var self = this;
+       var userinfo = getuser.userlookup(account, function(info){
+         console.log('wallet kent users: ', info.username);
+         var ipfsurl = self._getipfsurl(info.avatar, function(result){
+           cb(info.username, result);
+         });
+       });
+     },
+
+     _getipfsurl: function(hash, cb){
+     //debugger;
+     this._initipfs();
+     cb(this.ipfs_url + hash);
+   },
+
+   _initipfs: function(){
+     if (!this.ipfs_url){
+       this.ipfs_url = new Polymer.IronMetaQuery({
+           key: 'ipfs_url'
+         }).value;
+     }
+   },
+
       _visualstatechanged: function(e) {
         //console.log('Visual state changed');
         this.fire('visual-state-changed',e.detail);
@@ -683,24 +793,73 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
 
       toWaiting: function(){
           var self = this;
-          this.whisper = document.querySelector('locals-whisperer');
-          this.handler = document.querySelector('locals-verification-validator');
+          this.whisper = document.querySelector('#whisper');
+          //this.handler = document.querySelector('locals-verification-validator');
           console.log('ADD MEMBER: ',this.membercode);
           this.whisper.whisperpost(this.membercode, JSON.stringify({
-                  'command': 'requestpubkey',
+                  'command': 'requestpubkeyforclub',
                   'from': this.whisper.topic,
                   'data': null
                 }));
           this.state = 'waiting';
-          this.handler.addEventListener('pub-key', function(e){
-            console.log('got pub key: ', e.detail);
-            self.partnerpubkey = e.detail;
+          this.whisper.addEventListener('message-received', function(e){
+            console.log('CLUB LISTENER GETS', e.detail.message);
+            var m = JSON.parse(e.detail.message);
+            var from = e.detail.from;
 
-            /* SPONNETRAKET: Hier de transactie doen!!!!!! */
-           console.log("Ich hemmem!", self.partnerpubkey);
-
+            if(m.command=='pubkeyforclub'){
+              console.log('got pub key: ', m.pubkey);
+              // start transaction here.
+              self.addClubMember(m.pubkey, from, function(err, res){
+                console.log('add clubmember ',err, res);
+                self.whisper.whisperpost(from, JSON.stringify({
+                        'command': 'clubadd',
+                        'from': this.whisper.topic,
+                        'data': null
+                      }));
+              });
+              //self.partnerpubkey = e.detail;
+            };
          });
         },
+
+        addClubMember: function(pubkey, from, cb){
+            //debugger;
+            // we gaan dan wat geld versjassen
+            this.web3wallet = document.querySelector('web3-wallet');
+            //this.amount = 1;
+            var self = this;
+
+            this.contracturl = this.resolveUrl('../../contracts/localsClub.json');
+            this.importHref(this.contracturl, function(e) {
+              this.contractjson = JSON.parse(e.target.import.body.innerText);
+                 self.web3wallet.web3.eth.getGasPrice(function(err, result){
+                var gasPrice = result.toNumber(10);
+              console.log('gasprice: ', gasPrice);
+
+              var MyContract = self.web3wallet.web3.eth.contract(self.contractjson.abi);
+              var myContractInstance = MyContract.at(self.contractaddress);
+                console.log('initiating membership of ',pubkey, ' at contract ', self.contractaddress, 'from: ', self.web3wallet.account);
+                myContractInstance.addMember.sendTransaction(pubkey, 'nick', {
+                  from: app.helpers.fixaddress(self.web3wallet.account),
+                  gasPrice: gasPrice,
+                  gasLimit: 3000000,
+                  gas: 2000000
+                }, function(err, result){
+                  console.log(err, result);
+                  //var coinbalance = myContractInstance.balanceOf(self.fixaddress(self.web3wallet.account));
+                    //self.localcoinbalance = coinbalance;
+                    if (cb){
+                      cb(err,result);
+                    }
+                });
+
+              });
+              //this.web3.send(this.partnerpubkey, this.amount);
+            });
+            this.sendcoinstate = 'first';
+          },
+
 
     _sizeview: function(){
 
