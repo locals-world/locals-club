@@ -72,9 +72,9 @@ Example:
         @apply(--locals-font-small);
       }
 
-/*      iron-pages {
+      iron-pages {
         height: 100%;
-      }*/
+      }
 
   .whitespace {
     height: 2vh;
@@ -354,7 +354,7 @@ Example:
         <img src="images/localsclub-default-3c.png">
       </div>
       <div class="previewvals">
-        <h1>{{contractaddress}}</h1>
+        <!-- <h1>{{contractaddress}}</h1> -->
         <h2>{{datastate.name}}</h2>
       </div>
     </div>
@@ -377,8 +377,6 @@ Example:
   </template>
 
   </template>
-
-
 
   <template is="dom-if" if="{{_is(renderstate,'open')}}">
     <template is="dom-if" if="{{_is(status,'creating')}}">
@@ -435,7 +433,6 @@ Example:
 
           <template is="dom-if" if="{{_is(state,'init')}}">
           <div class="whitespace"></div>
-            <h2>I am <span>{{contractaddress}}</span></h2>
             <locals-input class="newmember" label="New member code" bind-value="{{membercode}}" center></locals-input>
             <div class="whitespace"></div>
             <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button>
@@ -625,9 +622,8 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
       // Element Lifecycle
       ready: function() {
 
-        this.status = 'created';
+        //this.status = 'created';
         this.state = 'init';
-
 
         this.dataconfig = {
           fields: [
