@@ -208,7 +208,7 @@ Example:
 
       .creatingmsg {
         color:var(--locals-blue);
-        margin: 6px 0px 0px 0px;
+        margin: 10px 0px 0px 0px;
       }
 
 /*      .failed h2 {
@@ -218,10 +218,10 @@ Example:
 
       .failedmsg p {
         color:var(--locals-red);
-        font-size: 14px;
+        font-size: 18px;
         line-height: 18px;
-        @apply(--opensans-semibold);
-        margin: 6px 0px 0px 0px;
+        @apply(--opensans-light);
+        margin: 10px 0px 0px 0px;
       }
 
       .failedicon {
@@ -234,7 +234,7 @@ Example:
         @apply(--layout-center-center);
         border: 1px solid var(--locals-red);
         color:var(--locals-red);
-        margin: 10px 20px 0px 10px;
+        margin: 15px 20px 0px 10px;
       }
 
       .detail {
@@ -264,7 +264,7 @@ Example:
       .clubcontainer  {
         width: 100%;
         box-sizing: border-box;
-        padding: 8vw;
+/*        padding: 8vw;*/
       }
 
       .clubcanvas {
@@ -273,10 +273,7 @@ Example:
         width: 100%;
       }
 
-      .newmember {
-        width: 100%;
-        max-width: 600px;
-      }
+
 
       .clubapps {
         width: 100%;
@@ -311,6 +308,53 @@ Example:
         border: 1px solid red;
       }
 
+      .addmember {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-center-justified);
+        border-bottom: 1px solid rgba(0,0,0,0.05);      
+        box-sizing: border-box;
+                padding: var(--closed-padding);
+
+      }
+      .newmember {
+        @apply(--layout-flex);
+
+/*        width: 100%;
+        max-width: 300px;*/
+      }
+
+      .newmemberconfirm {
+        margin-left: 20px;
+      }
+
+      .clubmember {
+        width: 100%;
+        @apply(--layout-horizontal);
+        @apply(--layout-center);
+        @apply(--layout-start-justified);
+        box-sizing: border-box;
+        padding: var(--closed-padding);
+        border-bottom: 1px solid rgba(0,0,0,0.05);      
+      }
+
+
+      .clubmemberavatar {
+        width:40px;
+        height: 40px;
+        border-radius: 50%;
+        overflow: hidden;
+        background-color: transparent;
+        margin-right: 15px;
+      }
+
+      .clubmemberavatar img {
+        width: 100%;
+        height: 100%;
+        border: none;
+
+      }
 
       </style>
 
@@ -371,7 +415,7 @@ Example:
         <div class="failedicon">!</div>
       </div>
       <div class="failedmsg">
-        <p>Creating failed</p>
+        <p>Failed</p>
       </div>
     </div>
   </template>
@@ -433,13 +477,19 @@ Example:
 
           <template is="dom-if" if="{{_is(state,'init')}}">
           <div class="whitespace"></div>
-            <locals-input class="newmember" label="New member code" bind-value="{{membercode}}" center></locals-input>
+
+          <div class="addmember">
+            <locals-input class="newmember" label="New member code" bind-value="{{membercode}}"></locals-input>
             <div class="whitespace"></div>
-            <locals-button icon="arrowright" small on-tap="toWaiting"></locals-button>
+            <locals-button bg="blue" txtcolor="white" class="newmemberconfirm" icon="plus" small on-tap="toWaiting" id="newmemberbtn"></locals-button>
+          </div>
             <template is="dom-repeat" items="{{memberlist}}">
-              <div class="avatar" id="avatar">
+            <div class="clubmember">
+              <div class="clubmemberavatar">
                 <img src="{{item.avatar}}">
-              </div> <span>{{item.username}}</span>
+              </div>
+              <p>{{item.username}}</p>
+            </div>
             </template>
           </template>
 
@@ -453,7 +503,7 @@ Example:
           </div>
           <section part="babbles">
             <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam efficitur sollicitudin magna, rutrum bibendum tellus vulputate id. Pellentesque magna velit, ornare eget elit pulvinar, semper eleifend ipsum. Praesent facilisis lacus nec lorem maximus, vitae fringilla enim elementum. Maecenas gravida vestibulum tortor. Integer molestie maximus urna, in consequat augue ultricies ut. Etiam scelerisque id erat in fringilla. Sed arcu turpis, consequat a ullamcorper eu, commodo eget nibh. Suspendisse nunc velit, pharetra nec volutpat eget, sodales in libero. Pellentesque tempor leo justo, ac malesuada enim varius in.
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. <!-- Etiam efficitur sollicitudin magna, rutrum bibendum tellus vulputate id. Pellentesque magna velit, ornare eget elit pulvinar, semper eleifend ipsum. Praesent facilisis lacus nec lorem maximus, vitae fringilla enim elementum. Maecenas gravida vestibulum tortor. Integer molestie maximus urna, in consequat augue ultricies ut. Etiam scelerisque id erat in fringilla. Sed arcu turpis, consequat a ullamcorper eu, commodo eget nibh. Suspendisse nunc velit, pharetra nec volutpat eget, sodales in libero. Pellentesque tempor leo justo, ac malesuada enim varius in.
 
 Pellentesque vestibulum pellentesque tristique. Morbi vulputate orci nunc. Cras mattis hendrerit maximus. Aenean ac quam nec ipsum venenatis sagittis in nec velit. Aenean efficitur urna vulputate iaculis commodo. Praesent a tortor convallis, finibus nunc sed, dictum augue. Nam finibus iaculis sollicitudin. In ut blandit augue, quis scelerisque eros. Donec pellentesque faucibus facilisis. Proin tincidunt maximus enim. Aliquam erat volutpat. Praesent vel pellentesque lorem, nec facilisis est. Mauris molestie, dolor ut tempor viverra, quam dolor finibus turpis, in venenatis ligula ligula in nisl.
 
@@ -461,7 +511,7 @@ Quisque volutpat enim eget rhoncus dapibus. Ut sed magna at sem mollis luctus ne
 
 Vestibulum ac metus nunc. Suspendisse leo nisl, mollis in ullamcorper quis, feugiat id est. Sed felis ipsum, viverra sit amet ligula sed, sodales cursus odio. Aenean finibus suscipit eleifend. Interdum et malesuada fames ac ante ipsum primis in faucibus. In odio augue, imperdiet non fermentum a, blandit at mauris. Praesent convallis est mollis tellus ullamcorper cursus. Praesent et est eu libero posuere condimentum ut ut metus. In tortor ligula, auctor eu felis id, feugiat suscipit libero. Ut tincidunt varius augue et pulvinar. Fusce nec dignissim est, non commodo erat. Etiam finibus lectus elit, fermentum ornare nulla ultrices id. Aliquam erat volutpat. Quisque bibendum enim nulla, eget hendrerit ex congue a. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
 
-Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dictum ligula euismod in. Sed id enim eget risus tempor placerat quis sit amet mi. Aliquam id libero lacus. Duis ut est iaculis, lacinia felis varius, elementum felis. Etiam at diam in est rhoncus pharetra. Vestibulum eget sem hendrerit, vestibulum nisi in, mollis nisi. In feugiat tristique euismod. Donec id sapien sed velit semper dictum. Nulla mi mauris, mattis vitae posuere eget, tempor in enim. Nulla sit amet lacus quam. Sed laoreet nisl id arcu hendrerit iaculis.
+Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dictum ligula euismod in. Sed id enim eget risus tempor placerat quis sit amet mi. Aliquam id libero lacus. Duis ut est iaculis, lacinia felis varius, elementum felis. Etiam at diam in est rhoncus pharetra. Vestibulum eget sem hendrerit, vestibulum nisi in, mollis nisi. In feugiat tristique euismod. Donec id sapien sed velit semper dictum. Nulla mi mauris, mattis vitae posuere eget, tempor in enim. Nulla sit amet lacus quam. Sed laoreet nisl id arcu hendrerit iaculis. -->
 
             </p>
 <div class="whitespace"></div>
@@ -485,7 +535,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
           <div class="extrainfo">
             <div class="failedicon detail">!</div>
             <div class="failedmsg">
-              <p>The creating of your club failed because you're out of LocalCoin, you cheapstake.</p>
+              <p>The creating of your club failed.</p>
             </div>
           </div>
         </div>
@@ -546,7 +596,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
 
         selectedapp: {
           type: String,
-          value: 'babbles'
+          value: 'users'
         },
 
         contractaddress: {
@@ -591,6 +641,11 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
           value: false,
           observer: '_sizeview'
         },
+
+        membercode: {
+          type: String,
+          observer: '_membercode'          
+        }
       },
 
       _newblock: function(){
@@ -933,6 +988,10 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
 
       appSelected: function(){
         // console.log("Er is dus geselecteerd op:", this.selectedapp);
+      },
+
+      _membercode: function(){
+        console.log("Yes, dit is de membercode", this.membercode);
       }
 
 
