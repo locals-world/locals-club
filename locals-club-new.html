@@ -390,13 +390,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var contracturl = this.resolveUrl('../../contracts/localsStore.json');
         this.importHref(contracturl, function(e) {
           var contractjson = JSON.parse(e.target.import.body.innerText);
-          console.log(this.contractjson);
+          console.log(contractjson);
           this.web3wallet.web3.eth.getGasPrice(function(err, result) {
             var gasPrice = result.toNumber(10);
             console.log('got gas price: ', gasPrice);
             var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
             var myContractInstance = MyContract.at(this.localsstorecontractaddress);
-            result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "clubicon", {
+            result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "QmXoTQWQE2RAFaQwDFUEG2DZuHNYgeXNHgtUKY248oSPsU", {
                 from: app.helpers.fixaddress(this.web3wallet.account),
                 gasPrice: gasPrice,
                 gasLimit: 3000000,
@@ -447,10 +447,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       this.contracturl = this.resolveUrl('../../contracts/localsCointoken.json');
       this.importHref(this.contracturl, function(e) {
-        this.contractjson = JSON.parse(e.target.import.body.innerText);
+        var contractjson = JSON.parse(e.target.import.body.innerText);
         this.web3wallet.web3.eth.getGasPrice(function(err, result) {
           var gasPrice = result.toNumber(10);
-          var MyContract = this.web3wallet.web3.eth.contract(this.contractjson.abi);
+          var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
           var myContractInstance = MyContract.at(this.localscointokencontractaddress);
          //debugger;
           result = myContractInstance.approveAndCall.sendTransaction(this.localsstorecontractaddress, 500,null, {
@@ -458,7 +458,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               gasPrice: gasPrice,
               gasLimit: 3000000,
               gas: 2000000,
-              data: this.contractjson.bytecode
+              data: contractjson.bytecode
             },
             function(err, result) {
               if (err !== null) {

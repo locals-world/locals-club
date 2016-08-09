@@ -90,7 +90,6 @@ Example:
         box-sizing: border-box;
         padding: var(--closed-padding);
         border-bottom: 1px solid rgba(0,0,0,0.05);
-
       }
 
       .previewavatar {
@@ -104,6 +103,7 @@ Example:
         margin: 0px 20px 0px 0px;
         background-color: var(--locals-grey1);
       }
+
       .previewavatar img {
         width: 100%;
         height: 100%;
@@ -134,14 +134,12 @@ Example:
         background-color: var(--locals-grey1);
       }
 
-
       .clubinfo {
         width: 100%;
         @apply(--layout-vertical);
         @apply(--layout-center);
 /*         @apply(--layout-start-justified);
         @apply(--layout-flex);*/
-
       }
 
       .clubavatar {
@@ -158,7 +156,6 @@ Example:
         width: 100%;
         height: 100%;
       }
-
 
       .clubavatar locals-icon {
         width: 100%;
@@ -180,7 +177,6 @@ Example:
         @apply(--layout-start-justified);
         @apply(--layout-wrap);
         margin: 0px 0px 20px 0px;
-
       }
 
       .extrainfo p {
@@ -189,14 +185,13 @@ Example:
 
       .clubmoneys {
         color: var(--locals-blue);
-
       }
+
       .clubdetails {
         color: var(--locals-grey6);
         margin: 0px 15px 0px 15px;
         text-decoration: underline;
       }
-
 
       .localcoinamount {
         margin: 0px 0px -3px 2px;
@@ -214,7 +209,6 @@ Example:
 /*      .failed h2 {
         color:var(--locals-red);
       }*/
-
 
       .failedmsg p {
         color:var(--locals-red);
@@ -251,14 +245,12 @@ Example:
         border-radius: 50%;
         overflow: hidden;
         background-color: transparent;
-
       }
 
       .avatar img {
         width: 100%;
         height: 100%;
         border: none;
-
       }
 
       .clubcontainer  {
@@ -272,8 +264,6 @@ Example:
         @apply(--layout-center-center);
         width: 100%;
       }
-
-
 
       .clubapps {
         width: 100%;
@@ -313,11 +303,11 @@ Example:
         @apply(--layout-horizontal);
         @apply(--layout-center);
         @apply(--layout-center-justified);
-        border-bottom: 1px solid rgba(0,0,0,0.05);      
+        border-bottom: 1px solid rgba(0,0,0,0.05);
         box-sizing: border-box;
-                padding: var(--closed-padding);
-
+        padding: var(--closed-padding);
       }
+
       .newmember {
         @apply(--layout-flex);
 
@@ -336,9 +326,8 @@ Example:
         @apply(--layout-start-justified);
         box-sizing: border-box;
         padding: var(--closed-padding);
-        border-bottom: 1px solid rgba(0,0,0,0.05);      
+        border-bottom: 1px solid rgba(0,0,0,0.05);
       }
-
 
       .clubmemberavatar {
         width:40px;
@@ -353,7 +342,6 @@ Example:
         width: 100%;
         height: 100%;
         border: none;
-
       }
 
       </style>
@@ -401,6 +389,7 @@ Example:
       <div class="previewvals">
         <!-- <h1>{{contractaddress}}</h1> -->
         <h2>{{datastate.name}}</h2>
+        <button on-tap="removeClub">REMOVE</button>
       </div>
     </div>
   </template>
@@ -496,7 +485,17 @@ Example:
           </template>
 
           <template is="dom-if" if="{{_is(state,'waiting')}}">
-          <locals-loader small>Retrieving info of new member</locals-loader>
+            <locals-loader small>Retrieving info of new member</locals-loader>
+          </template>
+
+          <template is="dom-if" if="{{_is(state,'memberpreview')}}">
+            <div class="clubmember">
+              <div class="clubmemberavatar">
+                <img src="{{previewavatar}}">
+              </div>
+              <p>{{previewusername}}</p>
+            </div>
+            <locals-confirm id="userconfirmation" on-confirm="confirmnewmember" type="normal"></locals-confirm>
           </template>
           <div class="whitespace"></div>
           <div class="whitespace"></div>
@@ -647,7 +646,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
 
         membercode: {
           type: String,
-          observer: '_membercode'          
+          observer: '_membercode'
         }
       },
 
@@ -871,23 +870,41 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
 
             if(m.command=='pubkeyforclub'){
               console.log('got pub key: ', m.pubkey);
-              // start transaction here.
-              self.addClubMember(m.pubkey, from, function(err, res){
-                console.log('add clubmember ',err, res);
-                self.whisper.whisperpost(from, JSON.stringify({
-                        'command': 'clubadd',
-                        'from': this.whisper.topic,
-                        'data': null
-                      }));
+
+              //Get the member-to-be information
+              self._getUsername(m.pubkey, function(username, avatar){
+                self.previewusername = username;
+                self.previewpubkey = m.pubkey;
+                self.previewavatar = avatar;
+                self.previewfrom = from;
+                self.state = 'memberpreview';
               });
+
+              // start transaction here.
+
+
               //self.partnerpubkey = e.detail;
             };
          });
         },
 
+        confirmnewmember: function(){
+          var self = this;
+
+          this.addClubMember(this.previewpubkey, this.previewfrom, function(err, res){
+            console.log('add clubmember ',err, res);
+            self.state = 'init';
+            var newclubdata =  JSON.stringify({ "status":self.status,"component":{"name":"locals-club"},"data":{"name":self.datastate.name},"config":[[0,0]],"contractaddress": self.contractaddress, "key":self.datakey});
+            self.whisper.whisperpost(self.previewfrom, JSON.stringify({
+                    'command': 'addclub',
+                    'from': this.whisper.topic,
+                    'data': newclubdata
+                  }));
+                });
+        },
+
         addClubMember: function(pubkey, from, cb){
             //debugger;
-            // we gaan dan wat geld versjassen
             this.web3wallet = document.querySelector('web3-wallet');
             //this.amount = 1;
             var self = this;
