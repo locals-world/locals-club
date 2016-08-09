@@ -382,6 +382,7 @@ Example:
       <div class="creatingmsg">
       <locals-loader small>Creating</locals-loader>
       </div>
+
     </div>
   </template>
 
@@ -433,6 +434,7 @@ Example:
           <div class="extrainfo">
             <locals-loader small>Creating your club</locals-loader>
           </div>
+          <button on-tap="removeClub">REMOVE</button>
         </div>
         </div>
       </div>
@@ -537,6 +539,7 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
             <div class="failedmsg">
               <p>The creating of your club failed.</p>
             </div>
+            <button on-tap="removeClub">REMOVE</button>
           </div>
         </div>
         </div>
@@ -753,6 +756,14 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         // removed from a document.
         //
         // Use this to clean up anything you did in `attached`.
+      },
+
+      removeClub: function(){
+         var lsapi = document.querySelector("#lsapi");
+         console.log('I am object nr. ', this.datakey);
+         delete lsapi.data.collection[this.datakey];
+         lsapi.writeData();
+         this.fire('to-home');
       },
 
       _contractaddress: function(){
