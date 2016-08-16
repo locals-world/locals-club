@@ -384,7 +384,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       createClub: function(cb) {
 
-
+        var web3 = this.web3wallet.web3;
         console.log('Mijn account: ', this.fixaddress(this.web3wallet.account));
 
         var contracturl = this.resolveUrl('../../contracts/localsStore.json');
@@ -420,16 +420,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   });
 
                   // if the above event does not arrive in time - set the club creation to failed...
-                  this.waitTx(txhash, function(success) {
-                    if (!success) {
-                      cb('timeout');
-                      //                    console.log('waitTX failed');
-                    } else {
-                      console.log('mined TXhash', txhash);
-                      //                    cb(null, result);
-                    }
+                  // this.waitTx(txhash, function(success) {
+                  //   if (!success) {
+                  //     cb('timeout');
+                  //     //                    console.log('waitTX failed');
+                  //   } else {
+                  //     console.log('mined TXhash', success);
+                  //     //cb(null, result);
+                  //     // var web3 = this.web3wallet.web3;
+                  //     // var contractAddress = this.localsstorecontractaddress;
+                  //     // var filter = web3.eth.filter({fromBlock:0, toBlock: 'latest', address: contractAddress, 'topics':['0x' + web3.sha3('ClubCreated(string,address,address)')]});
+                  //     // filter.watch(function(error, result) {
+                  //     //    console.log(error, result);
+                  //     // });
+                  //   }
                     //                  cb(success);
-                  }.bind(this));
+                  // }.bind(this));
 
 
                 }
