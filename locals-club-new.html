@@ -440,8 +440,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "QmXoTQWQE2RAFaQwDFUEG2DZuHNYgeXNHgtUKY248oSPsU", {
             from: app.helpers.fixaddress(this.web3wallet.account),
             gasPrice: gasPrice,
-            gasLimit: 3000000,
-            gas: 3000000,
+            gasLimit: 600000,
+            gas: 600000,
             data: contractjson.bytecode
           },
           function(err, txhash) {
@@ -505,8 +505,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           result = myContractInstance.approveAndCall.sendTransaction(this.localsstorecontractaddress, 500,null, {
             from: this.fixaddress(this.web3wallet.account),
             gasPrice: gasPrice,
-            gasLimit: 3000000,
-            gas: 2000000,
+            gasLimit: 40000,
+            gas: 40000,
             data: contractjson.bytecode
           },
           function(err, result) {
