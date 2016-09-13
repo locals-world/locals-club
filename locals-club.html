@@ -955,8 +955,8 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
                 myContractInstance.addMember.sendTransaction(pubkey, 'nick', {
                   from: app.helpers.fixaddress(self.web3wallet.account),
                   gasPrice: gasPrice,
-                  gasLimit: 3000000,
-                  gas: 2000000
+                  gasLimit: 600000,
+                  gas: 600000
                 }, function(err, result){
                   console.log(err, result);
                   //var coinbalance = myContractInstance.balanceOf(self.fixaddress(self.web3wallet.account));

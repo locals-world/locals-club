@@ -19,428 +19,477 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <dom-module id="locals-club-new">
   <template>
-    <style>
-       :host {
-          display: block;
-          box-sizing: border-box;
-          width: 100vw;
-/*          min-height: 100vh;*/
-          background-color: white;
-        }
+  <style>
+  :host {
+    display: block;
+    box-sizing: border-box;
+    width: 100vw;
+    /*          min-height: 100vh;*/
+    background-color: white;
+  }
 
-        h1 {
-          @apply(--locals-font-h1);
-        }
+  h1 {
+    @apply(--locals-font-h1);
+  }
 
-        p, a, ul, li {
-          @apply(--locals-font-body1);
-        }
-
-
-        .total {
-          width: 100vw;
-/*          height: 100%;
-          min-height: 100vh;*/
-
-          @apply(--layout-vertical);
-          @apply(--layout-center);
-
-          background-color: var(--locals-grey1);
-        }
-
-        .tussenschot {
-          width: 100%;
-          height: 2px;
-          background-color: rgba(0,0,0,0.05);
-        }
-
-        .whitespace {
-          height: 2vh;
-          min-height: 20px;
-        }
+  p, a, ul, li {
+    @apply(--locals-font-body1);
+  }
 
 
+  .total {
+    width: 100vw;
+    /*          height: 100%;
+    min-height: 100vh;*/
 
-      .selectedtype {
-        box-sizing: border-box;
-        padding: 0vw 10vw 10vw 10vw;
-/*        width: 100vw;
-        height: 100%;*/
-        @apply(--layout-vertical);
-        @apply(--layout-center);
+    @apply(--layout-vertical);
+    @apply(--layout-center);
 
-      }
+    background-color: var(--locals-grey1);
+  }
 
-      .selectedtype locals-input {
-                  max-width: 600px;
-                  width: 100%;
-      }
+  .tussenschot {
+    width: 100%;
+    height: 2px;
+    background-color: rgba(0,0,0,0.05);
+  }
 
-      .typeicon {
-        background-color: white;
-        border-radius: 50%;
-        width: 100px;
-        height: 100px;
-        overflow: hidden;
-      }
-
-      .typeicon img {
-        width: 100%;
-        height: 100%;
-      }
-
-        .selectedtype h1 {
-          /*margin-top: -20px;*/
-          text-align: center;
-        }
-
-        .clubname {
-          max-width: 600px;
-        }
-
-        .contract {
-          width: 100%;
-          max-width: 600px;
-          @apply(--layout-vertical);
-          @apply(--layout-center-center);
-          margin: 12px 0px 12px 0px;
-
-        }
-
-        .contract p,a {
-          color: var(--locals-grey7);
-          text-align: center;
-          font-size: 14px;
-          line-height: 19px;
-          margin: 0px 5px 0px 5px;
-
-        }
-
-      .changeconfig {
-        font-size: 12px;
-        margin: 0px 0px 10px 0px;
-        color: var(--locals-blue);
-      }
+  .whitespace {
+    height: 2vh;
+    min-height: 20px;
+  }
 
 
-      .itemcost {
-        width: 100%;
-        @apply(--layout-horizontal);
-        @apply(--layout-end);
-        @apply(--layout-center-justified);
-        color: var(--locals-darkblue);
-/*        border: 1px solid var(--locals-blue);
-*/        box-sizing: border-box;
-        padding: 8px;
-        border-radius: 3px;
-        margin: 20px 0px 20px 0px;
-      }
 
-      .itemcost p {
-        @apply(--opensans-semibold);
-        font-size: 16px;
-        line-height: 21px;
-      }
+  .selectedtype {
+    box-sizing: border-box;
+    padding: 0vw 10vw 10vw 10vw;
+    /*        width: 100vw;
+    height: 100%;*/
+    @apply(--layout-vertical);
+    @apply(--layout-center);
 
-      .bolder {
-        @apply(--opensans-semibold);
-      }
+  }
 
-      .localcoinamount {
-/*        width: 15px;
-        height: 15px;*/
-        margin: 0px 0px -3px 2px;
-      }
+  .selectedtype locals-input {
+    max-width: 600px;
+    width: 100%;
+  }
 
-      .currentconfig {
-        width: 100%;
-        @apply(--layout-horizontal);
-        @apply(--layout-wrap);
-        @apply(--layout-start);
-        @apply(--layout-start-justified);
-        margin: 30px 0px 30px 0px;
-      }
+  .typeicon {
+    background-color: white;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+  }
 
-      .configitem {
-        width: 100%;
-        max-width: 300px;
-        @apply(--layout-horizontal);
-        @apply(--layout-start);
-        @apply(--layout-start-justified);
-        margin: 10px 0px 10px 0px;
-      }
+  .typeicon img {
+    width: 100%;
+    height: 100%;
+  }
 
-      .configitem .itemicon {
-        margin: 4px 15px 0px 0px;
-        background-color: var(--locals-grey2);
-        border-radius: 50%;
-        box-sizing: border-box;
-        padding: 10px;
+  .selectedtype h1 {
+    /*margin-top: -20px;*/
+    text-align: center;
+  }
 
-      }
+  .clubname {
+    max-width: 600px;
+  }
 
+  .contract {
+    width: 100%;
+    max-width: 600px;
+    @apply(--layout-vertical);
+    @apply(--layout-center-center);
+    margin: 12px 0px 12px 0px;
 
-      .configitemdescr {
-        @apply(--layout-flex);
-        @apply(--layout-vertical);
-        @apply(--layout-start);
-        @apply(--layout-start-justified);
-      }
+  }
 
-      .configitemdescr p {
-        font-size: 16px;
-        line-height: 22px;
-        color: var(--locals-darkgrey);
-        margin: 6px 0px 6px 0px;
-        list-style:none;
-        list-style-position: inside;
+  .contract p,a {
+    color: var(--locals-grey7);
+    text-align: center;
+    font-size: 14px;
+    line-height: 19px;
+    margin: 0px 5px 0px 5px;
 
-      }
+  }
+
+  .changeconfig {
+    font-size: 12px;
+    margin: 0px 0px 10px 0px;
+    color: var(--locals-blue);
+  }
 
 
-        .tussenschot {
-          width: 100%;
-          height: 2px;
-          background-color: rgba(0,0,0,0.05);
-        }
-/*      .topbar {
-        width: 100%;
-        background-color: transparent;
-        height: var(--topbar-height);
-        @apply(--layout-horizontal);
-        @apply(--layout-center);
-        box-sizing: border-box;
-        padding: 10px 20px 10px 10px;
-        }
+  .itemcost {
+    width: 100%;
+    @apply(--layout-horizontal);
+    @apply(--layout-end);
+    @apply(--layout-center-justified);
+    color: var(--locals-darkblue);
+    /*        border: 1px solid var(--locals-blue);
+    */        box-sizing: border-box;
+    padding: 8px;
+    border-radius: 3px;
+    margin: 20px 0px 20px 0px;
+  }
 
-      .flex {
-        @apply(--layout-horizontal);
-        @apply(--layout-flex);
-      }*/
+  .itemcost p {
+    @apply(--opensans-semibold);
+    font-size: 16px;
+    line-height: 21px;
+  }
+
+  .bolder {
+    @apply(--opensans-semibold);
+  }
+
+  .localcoinamount {
+    /*        width: 15px;
+    height: 15px;*/
+    margin: 0px 0px -3px 2px;
+  }
+
+  .currentconfig {
+    width: 100%;
+    @apply(--layout-horizontal);
+    @apply(--layout-wrap);
+    @apply(--layout-start);
+    @apply(--layout-start-justified);
+    margin: 30px 0px 30px 0px;
+  }
+
+  .configitem {
+    width: 100%;
+    max-width: 300px;
+    @apply(--layout-horizontal);
+    @apply(--layout-start);
+    @apply(--layout-start-justified);
+    margin: 10px 0px 10px 0px;
+  }
+
+  .configitem .itemicon {
+    margin: 4px 15px 0px 0px;
+    background-color: var(--locals-grey2);
+    border-radius: 50%;
+    box-sizing: border-box;
+    padding: 10px;
+
+  }
 
 
-    </style>
+  .configitemdescr {
+    @apply(--layout-flex);
+    @apply(--layout-vertical);
+    @apply(--layout-start);
+    @apply(--layout-start-justified);
+  }
 
-      <div class="total">
+  .configitemdescr p {
+    font-size: 16px;
+    line-height: 22px;
+    color: var(--locals-darkgrey);
+    margin: 6px 0px 6px 0px;
+    list-style:none;
+    list-style-position: inside;
 
-      <div class="selectedtype">
-        <!-- <locals-icon icon="clubdefault" xl class="typeicon"></locals-icon> -->
-        <div class="typeicon">
-        <img src="images/localsclub-default-3c.png">
+  }
+
+
+  .tussenschot {
+    width: 100%;
+    height: 2px;
+    background-color: rgba(0,0,0,0.05);
+  }
+  /*      .topbar {
+  width: 100%;
+  background-color: transparent;
+  height: var(--topbar-height);
+  @apply(--layout-horizontal);
+  @apply(--layout-center);
+  box-sizing: border-box;
+  padding: 10px 20px 10px 10px;
+}
+
+.flex {
+@apply(--layout-horizontal);
+@apply(--layout-flex);
+}*/
+
+
+</style>
+
+<div class="total">
+
+  <template is="dom-if" if="{{_is(newclubstatus,'first')}}">
+
+  <div class="selectedtype">
+    <!-- <locals-icon icon="clubdefault" xl class="typeicon"></locals-icon> -->
+    <div class="typeicon">
+      <img src="images/localsclub-default-3c.png">
+    </div>
+    <a href="" class="changeconfig">Change image</a>
+
+    <div class="whitespace"></div>
+
+    <locals-input class="clubname" label="Name your new club" bind-value="{{clubname}}" center autofocus></locals-input>
+    <div class="whitespace"></div>
+
+    <div class="whitespace"></div>
+
+    <div class="tussenschot"></div>
+    <div class="currentconfig">
+      <div class="configitem">
+        <locals-icon verysmall icon="users" iconcolor="grey7" class="itemicon"></locals-icon>
+        <div class="configitemdescr">
+          <p>A new member must be added by the creator.</p>
+          <p>A member can be removed from the club by the creator.</p>
+          <a href="" class="changeconfig">Change this config</a>
         </div>
-        <a href="" class="changeconfig">Change image</a>
+      </div>
 
-        <div class="whitespace"></div>
-
-          <locals-input class="clubname" label="Name your new club" bind-value="{{clubname}}" center autofocus></locals-input>
-        <div class="whitespace"></div>
-
-        <div class="whitespace"></div>
-
-      <div class="tussenschot"></div>
-        <div class="currentconfig">
-        <div class="configitem">
-          <locals-icon verysmall icon="users" iconcolor="grey7" class="itemicon"></locals-icon>
-          <div class="configitemdescr">
-            <p>A new member must be added by the creator.</p>
-            <p>A member can be removed from the club by the creator.</p>
-            <a href="" class="changeconfig">Change this config</a>
-          </div>
+      <div class="configitem">
+        <locals-icon verysmall icon="voting" iconcolor="grey7"  class="itemicon"></locals-icon>
+        <div class="configitemdescr">
+          <p>Every member can make a new proposal (cost 2<locals-icon veryverysmall icon="localcoin" iconcolor="darkgrey" class="localcoinamount"></locals-icon>).</p>
+          <p>To pass a proposal as valid, the quotum of 80% of all voters should be reached.</p>
+          <a href="" class="changeconfig">Change this config</a>
         </div>
+      </div>
 
-        <div class="configitem">
-          <locals-icon verysmall icon="voting" iconcolor="grey7"  class="itemicon"></locals-icon>
-          <div class="configitemdescr">
-            <p>Every member can make a new proposal (cost 2<locals-icon veryverysmall icon="localcoin" iconcolor="darkgrey" class="localcoinamount"></locals-icon>).</p>
-            <p>To pass a proposal as valid, the quotum of 80% of all voters should be reached.</p>
-            <a href="" class="changeconfig">Change this config</a>
-          </div>
+      <div class="configitem">
+        <locals-icon verysmall icon="babbles" iconcolor="grey7"  class="itemicon"></locals-icon>
+        <div class="configitemdescr">
+          <p>Every member can join the clubs public chatroom.</p>
         </div>
-
-        <div class="configitem">
-          <locals-icon verysmall icon="babbles" iconcolor="grey7"  class="itemicon"></locals-icon>
-          <div class="configitemdescr">
-            <p>Every member can join the clubs public chatroom.</p>
-          </div>
-        </div>
+      </div>
 
       <div class="whitespace"></div>
 
-        </div>
-      <div class="tussenschot"></div>
-      <div class="itemcost">
-          <p>Creating this club costs 5<locals-icon veryverysmall icon="localcoin" iconcolor="darkblue" class="localcoinamount"></locals-icon></p>
-      </div>
-      <div class="tussenschot"></div>
-      <div class="whitespace"></div>
-        <div class="contract">
-        <a href="">LocalsClub.sol</a>
-        </div>
-      <div class="whitespace"></div>
+    </div>
+    <div class="tussenschot"></div>
+    <div class="itemcost">
+      <p>Creating this club costs 5<locals-icon veryverysmall icon="localcoin" iconcolor="darkblue" class="localcoinamount"></locals-icon></p>
+    </div>
+    <div class="tussenschot"></div>
+    <div class="whitespace"></div>
+    <div class="contract">
+      <a href="">LocalsClub.sol</a>
+    </div>
+    <div class="whitespace"></div>
 
-      <locals-button on-tap="confirm" bg="blue" icon="v" txtcolor="white" small></locals-button>
-<!--
-       <div class="descr">
-        <ul>
-          <li>The creator can add and remove members.</li>
-          <li>Every member can join the clubs chatroom.</li>
-          <li>Every member can make a new proposal (cost 2<locals-icon veryverysmall icon="localcoin" iconcolor="darkgrey"></locals-icon>).</li>
+    <locals-button on-tap="confirm" bg="blue" icon="v" txtcolor="white" small></locals-button>
 
-        </ul>
-        </div> -->
-<!--         <div class="itemcost">
-        <div class="whitespace"></div>
-
-          <p><span class="bolder">Cost: 5</span></p>
-          <locals-icon class="localcoinamount" veryverysmall icon="localcoin" iconcolor="blue"></locals-icon>
-        </div> -->
-      </div>
-
-
-<!--       <div class="tussenschot"></div>
-        <div class="whitespace"></div>
-      <locals-confirm on-cancel="cancel" on-confirm="confirm"></locals-confirm> -->
-      </div>
-
+  </div>
 
   </template>
-  <script>
-  (function() {
-    'use strict';
 
-    Polymer({
-      is: 'locals-club-new',
+  <template is="dom-if" if="{{_is(newclubstatus,'second')}}">
 
-      properties: {
-        foo: {
-          type: String,
-          value: 'locals-club-new',
-          notify: true
-        }
+  <div class="selectedtype">
+    <!-- <locals-icon icon="clubdefault" xl class="typeicon"></locals-icon> -->
+    <p>Your club <b><span>{{clubname}}</span></b> is being created on the blockchain.</p>
+    <p>Please wait and don't close this!</p>
+    <div class="whitespace"></div>
+    <div class="configitemdescr">
+      <template is="dom-repeat" items="{{statuslog}}">
+        <p>{{item.descr}}</p>
+      </template>
+    </div>
+
+  </div>
+
+  </template>
+
+  <template is="dom-if" if="{{_is(newclubstatus,'third')}}">
+
+  <div class="selectedtype">
+    <!-- <locals-icon icon="clubdefault" xl class="typeicon"></locals-icon> -->
+    <p>Club created. Go back to home.</p>
+    <div class="whitespace"></div>
+    <locals-button on-tap="toHome" bg="blue" icon="v" txtcolor="white" small></locals-button>
+
+  </div>
+
+  </template>
+
+
+</div>
+
+
+</template>
+<script>
+(function() {
+  'use strict';
+
+  Polymer({
+    is: 'locals-club-new',
+
+    properties: {
+      foo: {
+        type: String,
+        value: 'locals-club-new',
+        notify: true
       },
+      statuslog: {
+        type: Array,
+        value: []
+      }
+    },
 
-      ready: function(){
+    ready: function(){
 
-      },
+    },
 
-      attached: function() {
+    attached: function() {
 
-        this.web3wallet = document.querySelector('web3-wallet');
-
-
-        this.localsstorecontractaddress = new Polymer.IronMetaQuery({
-          key: 'localsstorecontractaddress'
-        }).value;
-
-        this.localscointokencontractaddress = new Polymer.IronMetaQuery({
-          key: 'localscointokencontractaddress'
-        }).value;
-
-      },
-
-      toHome: function(){
-        this.fire('from-detail');
-      },
-
-      confirm: function(cb) {
-
-        var clubid = uuid.v4();
-
-        var lsapi = document.getElementById("lsapi");
-        console.log(lsapi.data.collection);
-
-        lsapi.data.collection[clubid] = {
-            "status": "creating",
-            "component": {
-              "name": "locals-club"
-//              "contract": "0x000"
-            },
-            "data":{
-              "name":this.clubname,
-              },
-            "config":
-              [[0,0]]
-            };
-//        debugger;
-        lsapi.writeData();
+      this.web3wallet = document.querySelector('web3-wallet');
 
 
-        this.approveAndCall(function(err, res) {
-          console.log('ApproveAndVall is gebeurd...', res);
-          this.createClub(function(err, res) {
-            if (err){
-              console.log('Error creating club....');
-              lsapi.data.collection[clubid].status = 'failed';
-              lsapi.writeData();
-            }else{
-              console.log('createClub is gebeurd... club adres=', res);
-              lsapi.data.collection[clubid].status = 'created';
-              lsapi.data.collection[clubid].contractaddress = res;
-              lsapi.writeData();
-            }
-          });
-        }.bind(this));
-      },
+      this.localsstorecontractaddress = new Polymer.IronMetaQuery({
+        key: 'localsstorecontractaddress'
+      }).value;
 
-      createClub: function(cb) {
+      this.localscointokencontractaddress = new Polymer.IronMetaQuery({
+        key: 'localscointokencontractaddress'
+      }).value;
 
+      this.newclubstatus = 'first';
 
-        console.log('Mijn account: ', this.fixaddress(this.web3wallet.account));
+    },
 
-        var contracturl = this.resolveUrl('../../contracts/localsStore.json');
-        this.importHref(contracturl, function(e) {
-          var contractjson = JSON.parse(e.target.import.body.innerText);
-          console.log(contractjson);
-          this.web3wallet.web3.eth.getGasPrice(function(err, result) {
-            var gasPrice = result.toNumber(10);
-            console.log('got gas price: ', gasPrice);
-            var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
-            var myContractInstance = MyContract.at(this.localsstorecontractaddress);
-            result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "QmXoTQWQE2RAFaQwDFUEG2DZuHNYgeXNHgtUKY248oSPsU", {
-                from: app.helpers.fixaddress(this.web3wallet.account),
-                gasPrice: gasPrice,
-                gasLimit: 3000000,
-                gas: 3000000,
-                data: contractjson.bytecode
-              },
-              function(err, txhash) {
-                if (err !== null) {
-                  console.log(err);
-                  console.log('ERROR: Transaction didnt go through. See console.');
-                  cb(err);
-                } else {
-                  console.log('Createclub Successful!');
-                  console.log('Createclub txhash=', txhash);
+    toHome: function(){
+      this.fire('from-detail');
+    },
 
-                  var event = myContractInstance.ClubCreated(null, null, null, function(error, result){
-                    if (result && result.transactionHash === txhash) {
-                      console.log('club created YAY');
-                      cb(null, result.args._newClub);
-                    }
-                  });
+    confirm: function(cb) {
 
-                  // if the above event does not arrive in time - set the club creation to failed...
-                  this.waitTx(txhash, function(success) {
-                    if (!success) {
-                      cb('timeout');
-                      //                    console.log('waitTX failed');
-                    } else {
-                      console.log('mined TXhash', txhash);
-                      //                    cb(null, result);
-                    }
-                    //                  cb(success);
-                  }.bind(this));
+      var tempmsg = 'Starting create club process.';
+      this.push('statuslog', {'descr': tempmsg });
 
+      var clubid = uuid.v4();
 
+      var lsapi = document.getElementById("lsapi");
+      console.log(lsapi.data.collection);
+
+      lsapi.data.collection[clubid] = {
+        "status": "creating",
+        "component": {
+          "name": "locals-club"
+          //              "contract": "0x000"
+        },
+        "data":{
+          "name":this.clubname,
+        },
+        "config":
+        [[0,0]]
+      };
+      //        debugger;
+      lsapi.writeData();
+
+      this.newclubstatus = 'second';
+
+      var self = this;
+
+      this.approveAndCall(function(err, res) {
+        console.log('ApproveAndCall is gebeurd...', res);
+        var tempmsg = 'ApproveAndCall done. tx: ' + res;
+        self.push('statuslog', {'descr': tempmsg });
+        this.createClub(function(err, res) {
+          if (err){
+            console.log('Error creating club....');
+            var tempmsg = 'Error creating club: ' + err;
+            self.push('statuslog', {'descr': tempmsg });
+            lsapi.data.collection[clubid].status = 'failed';
+            lsapi.writeData();
+            self.newclubstatus = 'third';
+          }else{
+            console.log('createClub is gebeurd... club adres=', res);
+            var tempmsg = 'Club created: ' + res;
+            self.push('statuslog', {'descr': tempmsg });
+            lsapi.data.collection[clubid].status = 'created';
+            lsapi.data.collection[clubid].contractaddress = res;
+            lsapi.writeData();
+            self.newclubstatus = 'third';
+          }
+        });
+      }.bind(this));
+    },
+
+    createClub: function(cb) {
+
+      var web3 = this.web3wallet.web3;
+      console.log('Mijn account: ', this.fixaddress(this.web3wallet.account));
+
+      var tempmsg = 'Creating club for user: ' + this.fixaddress(this.web3wallet.account);
+      this.push('statuslog', {'descr': tempmsg });
+
+      var contracturl = this.resolveUrl('../../contracts/localsStore.json');
+      this.importHref(contracturl, function(e) {
+        var contractjson = JSON.parse(e.target.import.body.innerText);
+        console.log(contractjson);
+        this.web3wallet.web3.eth.getGasPrice(function(err, result) {
+          var gasPrice = result.toNumber(10);
+          console.log('got gas price: ', gasPrice);
+          var tempmsg = 'Gas price: ' + gasPrice;
+          this.push('statuslog', {'descr': tempmsg });
+          var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
+          var myContractInstance = MyContract.at(this.localsstorecontractaddress);
+          result = myContractInstance.createClub.sendTransaction("nickname", this.clubname, "QmXoTQWQE2RAFaQwDFUEG2DZuHNYgeXNHgtUKY248oSPsU", {
+            from: app.helpers.fixaddress(this.web3wallet.account),
+            gasPrice: gasPrice,
+            gasLimit: 600000,
+            gas: 600000,
+            data: contractjson.bytecode
+          },
+          function(err, txhash) {
+            if (err !== null) {
+              console.log(err);
+              console.log('ERROR: Transaction didnt go through. See console.');
+              cb(err);
+            } else {
+              console.log('Createclub Successful!');
+              console.log('Createclub txhash=', txhash);
+              var tempmsg = 'Createclub tx: ' + txhash;
+              this.push('statuslog', {'descr': tempmsg });
+
+              var event = myContractInstance.ClubCreated(null, null, null, function(error, result){
+                if (result && result.transactionHash === txhash) {
+                  console.log('club created YAY');
+                  cb(null, result.args._newClub);
                 }
-              }.bind(this));
+              });
+
+              // if the above event does not arrive in time - set the club creation to failed...
+              // this.waitTx(txhash, function(success) {
+              //   if (!success) {
+              //     cb('timeout');
+              //     //                    console.log('waitTX failed');
+              //   } else {
+              //     console.log('mined TXhash', success);
+              //     //cb(null, result);
+              //     // var web3 = this.web3wallet.web3;
+              //     // var contractAddress = this.localsstorecontractaddress;
+              //     // var filter = web3.eth.filter({fromBlock:0, toBlock: 'latest', address: contractAddress, 'topics':['0x' + web3.sha3('ClubCreated(string,address,address)')]});
+              //     // filter.watch(function(error, result) {
+              //     //    console.log(error, result);
+              //     // });
+              //   }
+              //                  cb(success);
+              // }.bind(this));
+
+
+            }
           }.bind(this));
         }.bind(this));
+      }.bind(this));
 
-      },
+    },
 
-      approveAndCall: function(cb){
-        console.log('create a club',this.clubname);
+    approveAndCall: function(cb){
+      console.log('create a club',this.clubname);
 
 
       console.log('Mijn account: ', this.fixaddress(this.web3wallet.account));
@@ -452,22 +501,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var gasPrice = result.toNumber(10);
           var MyContract = this.web3wallet.web3.eth.contract(contractjson.abi);
           var myContractInstance = MyContract.at(this.localscointokencontractaddress);
-         //debugger;
+          //debugger;
           result = myContractInstance.approveAndCall.sendTransaction(this.localsstorecontractaddress, 500,null, {
-              from: this.fixaddress(this.web3wallet.account),
-              gasPrice: gasPrice,
-              gasLimit: 3000000,
-              gas: 2000000,
-              data: contractjson.bytecode
-            },
-            function(err, result) {
-              if (err !== null) {
-                console.log(err);
-                console.log('ERROR: Transaction didnt go through. See console.');
-                cb(err);
-              } else {
-                console.log('approveAndCall Successful!');
-                console.log('approveAndCall Tx hash=', result);
+            from: this.fixaddress(this.web3wallet.account),
+            gasPrice: gasPrice,
+            gasLimit: 40000,
+            gas: 40000,
+            data: contractjson.bytecode
+          },
+          function(err, result) {
+            if (err !== null) {
+              console.log(err);
+              console.log('ERROR: Transaction didnt go through. See console.');
+              cb(err);
+            } else {
+              console.log('approveAndCall Successful!');
+              console.log('approveAndCall Tx hash=', result);
+
+              var tempmsg = 'approveAndCall: ' + result;
+              this.push('statuslog', {'descr': tempmsg });
 
 
               this.waitTx(result, function(success) {
@@ -482,14 +534,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               }.bind(this))
 
 
-              }
-            }.bind(this));
+            }
+          }.bind(this));
         }.bind(this));
       }.bind(this));
 
 
 
-      },
+    },
 
     fixaddress: function(address) {
       function strStartsWith(str, prefix) {
@@ -507,46 +559,54 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-        waitTx: function(txHash, callback) {
-          /*
-           * Watch for a particular transaction hash and call the awaiting function when done;
-           * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
-           * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
-           */
-          var blockCounter = 15;
-          // Wait for tx to be finished
-          var filter = this.web3wallet.web3.eth.filter('latest').watch(function(err, blockHash) {
-            if (blockCounter <= 0) {
-              filter.stopWatching();
-              filter = null;
-              console.warn('!! Tx expired !!');
-              if (callback)
-                return callback(false);
-              else
-                return false;
-            }
-            // Get info about latest Ethereum block
-            var block = this.web3wallet.web3.eth.getBlock(blockHash);
-            --blockCounter;
-            // Found tx hash?
-            if (block.transactions.indexOf(txHash) > -1) {
-              //debugger;
-              // Tx is finished
-              filter.stopWatching();
-              filter = null;
-              if (callback)
-                return callback(true);
-              else
-                return true;
-              // Tx hash not found yet?
-            } else {
-              // console.log('Waiting tx..', blockCounter);
-            }
-          }.bind(this));
-        },
+    waitTx: function(txHash, callback) {
+      /*
+      * Watch for a particular transaction hash and call the awaiting function when done;
+      * Ether-pudding uses another method, with web3.eth.getTransaction(...) and checking the txHash;
+      * on https://github.com/ConsenSys/ether-pudding/blob/master/index.js
+      */
+      var blockCounter = 15;
+      // Wait for tx to be finished
+      var filter = this.web3wallet.web3.eth.filter('latest').watch(function(err, blockHash) {
+        if (blockCounter <= 0) {
+          filter.stopWatching();
+          filter = null;
+          console.warn('!! Tx expired !!');
+          if (callback)
+          return callback(false);
+          else
+          return false;
+        }
+        // Get info about latest Ethereum block
+        var block = this.web3wallet.web3.eth.getBlock(blockHash);
+        --blockCounter;
+        // Found tx hash?
+        if (block.transactions.indexOf(txHash) > -1) {
+          //debugger;
+          // Tx is finished
+          filter.stopWatching();
+          filter = null;
+          if (callback)
+          return callback(true);
+          else
+          return true;
+          // Tx hash not found yet?
+        } else {
+          // console.log('Waiting tx..', blockCounter);
+        }
+      }.bind(this));
+    },
+
+    _is: function(a, b) {
+      if (b === undefined){
+        b = true;
+      }
+      //console.log(a ,'(',typeof a,') is',b,'(',typeof b,') they are equal for ==',a == b,', they are equal for ===',a === b);
+      return a === b;
+    }
 
 
-    });
-  })();
-  </script>
+  });
+})();
+</script>
 </dom-module>
