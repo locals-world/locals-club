@@ -473,7 +473,7 @@ Example:
           <div class="addmember">
             <locals-input class="newmember" label="New member code" bind-value="{{membercode}}"></locals-input>
             <div class="whitespace"></div>
-            <locals-button bg="blue" txtcolor="white" class="newmemberconfirm" icon="plus" small on-tap="toWaiting" id="newmemberbtn"></locals-button>
+            <locals-button bg="blue" txtcolor="white" class="newmemberconfirm" icon="plus" verysmall on-tap="toWaiting" disabled="{{newmemberbool}}"></locals-button>
           </div>
             <template is="dom-repeat" items="{{memberlist}}">
             <div class="clubmember">
@@ -583,6 +583,11 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
             },
           observer: '_datastate'
 
+        },
+
+        newmemberbool: {
+          type: Boolean,
+          value: true
         },
 
         renderstate: {
@@ -738,9 +743,6 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
       },
 
       attached: function() {
-        //var user = document.querySelector('locals-user');
-        // var clubtotal = document.querySelector('#clubtotal');
-        // console.log("HIERO ////////////////////////////", clubtotal);
 
         var self = this;
         //debugger;
@@ -1050,7 +1052,12 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
       },
 
       _membercode: function(){
-        console.log("Yes, dit is de membercode", this.membercode);
+        console.log("this.membercode.length:", this.membercode.length);
+        if(this.membercode.length == 5) {
+          this.newmemberbool = false;
+        } else {
+          this.newmemberbool = true;
+        }
       }
 
 
