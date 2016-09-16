@@ -749,6 +749,10 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
         //     var validations = self.$.ldataobject.getValidations();
         //   });
         // }
+      this.contractaddr = new Polymer.IronMetaQuery({
+          key: 'localscointokencontractaddress'
+        }).value;
+
       },
 
       detached: function() {
@@ -798,9 +802,6 @@ Etiam ornare volutpat enim vitae scelerisque. Nulla congue lacinia eros, non dic
           return;
          }
         var self = this;
-
-        this.contractaddr = "0xe94a4e5615E5d1BAfbDBc8a221D9b0995f67A752";
-
 
         this.contracturl = this.resolveUrl('../../contracts/localsCointoken.json');
         this.importHref(this.contracturl, function(e) {
