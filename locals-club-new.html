@@ -339,6 +339,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       toHome: function(){
+
         this.fire('from-detail');
       },
 
@@ -411,7 +412,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 } else {
                   console.log('Createclub Successful!');
                   console.log('Createclub txhash=', txhash);
-
+                  
                   var event = myContractInstance.ClubCreated(null, null, null, function(error, result){
                     if (result && result.transactionHash === txhash) {
                       console.log('club created YAY');
