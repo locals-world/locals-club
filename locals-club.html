@@ -440,7 +440,7 @@ Example:
             <div class="clubmoneys">
               <p>{{localcoinbalance}}<locals-icon veryverysmall icon="localcoin" iconcolor="blue" class="localcoinamount"></locals-icon></p>
             </div>
-            <button on-tap="removeClub">REMOVE</button>
+            <!-- <button on-tap="removeClub">REMOVE</button> -->
 
             <div class="clubdetails">
               <p>details</p>
@@ -475,7 +475,7 @@ Example:
           <div class="addmember">
             <locals-input class="newmember" label="New member code" bind-value="{{membercode}}"></locals-input>
             <div class="whitespace"></div>
-            <locals-button bg="blue" txtcolor="white" class="newmemberconfirm" icon="plus" small on-tap="toWaiting" id="newmemberbtn"></locals-button>
+            <locals-button bg="blue" txtcolor="white" class="newmemberconfirm" icon="plus" verysmall on-tap="toWaiting" disabled="{{newmemberbool}}"></locals-button>
           </div>
             <template is="dom-repeat" items="{{memberlist}}">
             <div class="clubmember">
@@ -579,6 +579,11 @@ Example:
             },
           observer: '_datastate'
 
+        },
+
+        newmemberbool: {
+          type: Boolean,
+          value: true
         },
 
         renderstate: {
@@ -734,9 +739,6 @@ Example:
       },
 
       attached: function() {
-        //var user = document.querySelector('locals-user');
-        // var clubtotal = document.querySelector('#clubtotal');
-        // console.log("HIERO ////////////////////////////", clubtotal);
 
         var self = this;
         //debugger;
@@ -745,6 +747,10 @@ Example:
         //     var validations = self.$.ldataobject.getValidations();
         //   });
         // }
+      this.contractaddr = new Polymer.IronMetaQuery({
+          key: 'localscointokencontractaddress'
+        }).value;
+
       },
 
       detached: function() {
@@ -794,9 +800,6 @@ Example:
           return;
          }
         var self = this;
-
-        this.contractaddr = "0xe94a4e5615E5d1BAfbDBc8a221D9b0995f67A752";
-
 
         this.contracturl = this.resolveUrl('../../contracts/localsCointoken.json');
         this.importHref(this.contracturl, function(e) {
@@ -949,8 +952,8 @@ Example:
                 myContractInstance.addMember.sendTransaction(pubkey, 'nick', {
                   from: app.helpers.fixaddress(self.web3wallet.account),
                   gasPrice: gasPrice,
-                  gasLimit: 3000000,
-                  gas: 2000000
+                  gasLimit: 600000,
+                  gas: 600000
                 }, function(err, result){
                   console.log(err, result);
                   //var coinbalance = myContractInstance.balanceOf(self.fixaddress(self.web3wallet.account));
@@ -1046,7 +1049,12 @@ Example:
       },
 
       _membercode: function(){
-        console.log("Yes, dit is de membercode", this.membercode);
+        console.log("this.membercode.length:", this.membercode.length);
+        if(this.membercode.length == 5) {
+          this.newmemberbool = false;
+        } else {
+          this.newmemberbool = true;
+        }
       }
 
 
